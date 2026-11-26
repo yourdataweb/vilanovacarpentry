@@ -327,41 +327,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .nav-toggle:hover { background: var(--paper-200); }
 
 /* ---------- language switch ---------- */
-.langs {
-  display: flex;
-  align-items: center;
-  gap: .2rem;
-  padding: .18rem;
-  border: 1px solid rgba(211, 186, 149, .5);
-  border-radius: 999px;
-  background: #fff;
-}
-.langs__link {
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  padding: .28rem .5rem;
-  border-radius: 999px;
-  text-decoration: none;
-  font-size: .76rem;
-  font-weight: 600;
-  color: var(--ink-soft);
-  line-height: 1;
-}
-.langs__link:hover { background: var(--paper-200); color: var(--wood-900); }
-.langs__link[aria-current="true"] {
-  background: var(--wood-900);
-  color: #fff;
-}
-.langs__flag {
-  width: 18px;
-  height: 12px;
-  border-radius: 2px;
-  flex: none;
-  box-shadow: 0 0 0 1px rgba(33, 21, 12, .15);
-  display: block;
-}
-.langs__code { text-transform: uppercase; letter-spacing: .04em; }
 
 /* ---------- buttons ---------- */
 .btn {
@@ -1233,4 +1198,90 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .reviews__all, .footer__legal { display: none !important; }
   .hero, .section--timber, .footer { background: #fff !important; color: #000 !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ==========================================================================
+   Language switch — the one canonical toolbar used by every site.
+   Change only the four custom properties at the top; never re-implement it.
+
+   Why it is written this way:
+   - a fixed 20x13 box with overflow:hidden, so a flag can never bleed out of
+     its pill (the inner SVG has no width/height of its own);
+   - the code label is always present, which keeps every pill the same width and
+     stops the narrow flags-only variant from looking misaligned;
+   - the active pill uses its own background, never a border, so no 1px seam
+     appears between adjacent pills;
+   - height is fixed, so the toolbar aligns with the phone button beside it.
+   ========================================================================== */
+
+.langs {
+  --langs-bg: #ffffff;
+  --langs-border: #dcd3c4;
+  --langs-ink: #4a423a;
+  --langs-active-bg: #3b3128;
+  --langs-active-ink: #ffffff;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 32px;
+  padding: 0 3px;
+  border: 1px solid var(--langs-border);
+  border-radius: 999px;
+  background: var(--langs-bg);
+  box-sizing: border-box;
+}
+
+.langs__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 9px;
+  border-radius: 999px;
+  text-decoration: none;
+  line-height: 1;
+  color: var(--langs-ink);
+  /* A hairline of the same colour as the background prevents the sub-pixel
+     seam some browsers draw between adjacent rounded pills. */
+  transition: background-color .15s ease, color .15s ease;
+}
+.langs__link:hover { background: rgba(0, 0, 0, .06); }
+.langs__link[aria-current="true"] {
+  background: var(--langs-active-bg);
+  color: var(--langs-active-ink);
+}
+.langs__link[aria-current="true"]:hover { background: var(--langs-active-bg); }
+
+/* The flag box is a hard size with clipping: an SVG with only a viewBox renders
+   at its intrinsic size and would otherwise overflow the pill. */
+.langs__flag {
+  display: block;
+  flex: none;
+  width: 20px;
+  height: 13px;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .12);
+}
+.langs__flag svg {
+  display: block;
+  width: 20px;
+  height: 13px;
+}
+
+.langs__code {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+/* On narrow screens the code alone is not enough to identify a language for a
+   screen reader, but the visible pill can drop to flag + code compactly. */
+@media (max-width: 420px) {
+  .langs { height: 30px; }
+  .langs__link { height: 24px; padding: 0 7px; gap: 5px; }
+  .langs__code { font-size: .68rem; }
 }

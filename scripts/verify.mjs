@@ -137,6 +137,27 @@ for (const l of LANGS) {
         return n;
       })(),
       totalSections: document.querySelectorAll("main section").length,
+      langs: (function () {
+        var n = document.querySelector(".langs");
+        if (!n) return { missing: true };
+        var pills = Array.prototype.slice.call(n.querySelectorAll("a"));
+        var flagsInside = pills.every(function (a) {
+          var f = a.querySelector(".langs__flag");
+          if (!f) return false;
+          var ar = a.getBoundingClientRect(), fr = f.getBoundingClientRect();
+          return fr.top >= ar.top - 0.5 && fr.bottom <= ar.bottom + 0.5 &&
+                 fr.left >= ar.left - 0.5 && fr.right <= ar.right + 0.5;
+        });
+        var rect = n.getBoundingClientRect();
+        return {
+          w: Math.round(rect.width), h: Math.round(rect.height),
+          scrollW: n.scrollWidth, scrollH: n.scrollHeight,
+          overflow: n.scrollWidth > n.clientWidth + 1 || n.scrollHeight > n.clientHeight + 1,
+          pills: pills.length,
+          codes: pills.filter(function (a) { return !!a.querySelector(".langs__code"); }).length,
+          flagsInside: flagsInside,
+        };
+      })(),
       wrapPaddingLeft: parseFloat(getComputedStyle(document.querySelector(".wrap")).paddingLeft) || 0,
       wrapMaxWidth: getComputedStyle(document.querySelector(".wrap")).maxWidth,
       /* Flat values, not an IIFE returning an object: an IIFE here serialises as an empty
@@ -174,6 +195,28 @@ for (const l of LANGS) {
     `[${l.code}] map embed src with place coordinates`);
   ok(info.mapIframes === 0, `[${l.code}] map not loaded before consent`, String(info.mapIframes));
   ok(info.cookieBar, `[${l.code}] cookie notice present`);
+
+  // Language switch: one canonical toolbar. These four measurements caught a flag
+  // overflowing its pill and a toolbar that was a different height on each site.
+  ok(info.langs.overflow === false, `[${l.code}] language switch has no clipped content`,
+    `scroll ${info.langs.scrollW}x${info.langs.scrollH} vs ${info.langs.w}x${info.langs.h}`);
+  ok(info.langs.flagsInside, `[${l.code}] every flag sits inside its pill`);
+  ok(info.langs.codes === info.langs.pills,
+    `[${l.code}] every language pill shows its code`, `${info.langs.codes}/${info.langs.pills}`);
+  ok(info.langs.h === 32, `[${l.code}] language switch is 32px tall at desktop`, `${info.langs.h}px`);
+  ok(info.langs.pills === LANGS.length, `[${l.code}] one pill per locale`, String(info.langs.pills));
+
+  // README must exist, link the live site, and use the shared section order.
+  const readmePath = join(ROOT, "README.md");
+  ok(existsSync(readmePath), `[${l.code}] README.md exists`);
+  if (existsSync(readmePath)) {
+    const readme = readFileSync(readmePath, "utf8");
+    ok(readme.includes(new URL(SITE_URL).hostname),
+      `[${l.code}] README links the live site`);
+    ok(/^## Page structure$/m.test(readme) && /^## Repo layout$/m.test(readme) &&
+       /^## Deploy$/m.test(readme) && /^## Technical notes$/m.test(readme),
+      `[${l.code}] README uses the shared section order`);
+  }
   // With JS off the page must still be readable: a .reveal rule that starts at
   // opacity 0 and waits for a script leaves the whole site blank.
   ok(noJs.hidden === 0, `[${l.code}] content visible with JS disabled`,

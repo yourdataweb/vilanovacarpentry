@@ -1,70 +1,83 @@
 # Vilanova Carpentry SL — website
 
-Static, trilingual site for a joinery workshop and timber merchant in Vilanova i la Geltrú.
-Plain HTML, one stylesheet, one small progressive-enhancement script. No framework, no build
-runtime: the build step renders the three language pages ahead of time.
+Static site for **Vilanova Carpentry SL**, a joinery workshop at Carrer d'Eusebi Millan, Vilanova i la Geltrú.
 
-- Public URL: <https://vilanovacarpentry.vilanovailageltru.info/>
-- Languages: Catalan (default, `/`), Spanish (`/es/`), English (`/en/`)
+Three languages, server-rendered HTML per locale, plain CSS and one small
+progressive-enhancement script. No framework, no runtime dependencies.
+
+## Live site
+
+- **Catalan (default):** <https://vilanovacarpentry.vilanovailageltru.info/>
+- **Spanish:** <https://vilanovacarpentry.vilanovailageltru.info/es/>
+- **English:** <https://vilanovacarpentry.vilanovailageltru.info/en/>
+
+## Page structure
+
+Hero led by a photo of finished work, then the workshop itself, the work it makes
+(furniture, fitted wardrobes, doors, kitchens, carpentry for builders, repairs), a job in four
+steps (measure, quote, make, fit), the timbers and finishes used, reviews, and contact with the
+phone as the primary action.
+
+## Repo layout
+
+```
+index.html                 Catalan (default locale)
+es/index.html              Spanish
+en/index.html              English
+ca/index.html              redirect to / (the default locale used to live here)
+src/template.html          the single template the build renders
+src/data.json              business data (address, phone, coordinates, rating)
+src/locales.json           locale list, which one is default, hreflang codes
+src/i18n/{ca,es,en}.json   all copy, per locale
+scripts/build.mjs          renders the locale pages + sitemap, robots, manifest
+scripts/assets.mjs         app icons and the Open Graph image
+scripts/card.mjs           handover card, 10.5 x 14.5 cm @ 300 dpi
+scripts/verify.mjs         headless checks against the built output
+assets/css/styles.css      all styles, responsive from 320 px up
+assets/js/main.js          navigation, reveal, cookie consent, lazy map
+assets/fonts/              self-hosted Fraunces and Inter (woff2 subsets)
+assets/img/                mark, icons, hero photo, OG image
+assets/photos/handover.png handover card with a QR to the live site
+.github/workflows/         deploy to S3 on push to main
+```
 
 ## Build
 
+Requires Node 20+ and `puppeteer` for the asset scripts.
+
 ```bash
-node scripts/build.mjs      # src/template.html + src/i18n/*.json -> index.html, es/, en/
-node scripts/assets.mjs     # favicon, PWA icons, og-image.jpg (needs assets/fonts/)
-node scripts/verify.mjs     # headless checks: SEO, a11y, layout, consent, responsive
-node scripts/card.mjs       # assets/photos/handover.png (10.5 x 14.5 cm @ 300 dpi, with QR)
-node scripts/optimize-card.mjs  # compacts handover.png under the 700 kB budget
+node scripts/build.mjs     # render the locale pages
+node scripts/assets.mjs    # regenerate icons and og-image.jpg
+node scripts/card.mjs      # regenerate the handover card
+node scripts/verify.mjs    # headless verification of the built output
 ```
 
-`node_modules` is a symlink to the workspace install (puppeteer, qrcode, pngjs); it is ignored
-by git.
+`build.mjs` fails on an unresolved template placeholder, an empty `href`/`src`, invalid
+JSON-LD, or a feature icon that has no entry in `scripts/icons.json`.
 
-## Structure
+## Editing content
 
-```
-src/
-  data.json          business facts: address, phone, coordinates, rating, reviews, photo credit
-  locales.json       locale list: code, name, output dir, hreflang
-  template.html      single template, rendered once per locale
-  i18n/<code>.json   all copy: meta, hero, sections, reviews, contact, cookies
-  hero-source.jpg    workshop photo, copied into assets/img/ at build time
-assets/
-  css/styles.css     design tokens, layout, responsive rules
-  js/main.js         nav toggle, scroll reveal, cookie banner, deferred map
-  fonts/             self-hosted Fraunces + Inter (woff2, latin + latin-ext)
-  img/               generated icons and og-image
-  photos/handover.png
-scripts/             build, asset generation, verification, handover card
-```
+Text lives in `src/i18n/*.json`; shared business facts live in `src/data.json`. Change those,
+run `node scripts/build.mjs`, commit the regenerated HTML. Do not hand-edit the generated
+`index.html` files — they are overwritten.
 
-## Content rules applied
+## Deploy
 
-- Every absolute URL (canonical, `og:url`, hreflang, sitemap, OG image, QR) derives from
-  `slug` + `siteDomain` in `src/data.json`; no host is hardcoded in the template.
-- Opening hours and price level are deliberately absent: they date quickly.
-- The rating is shown as `4.4 / 5` with the review count of 225. There is no oversized star
-  badge, because the rating is not high enough to carry a hero claim.
-- Testimonials are the two positive Google reviews, rewritten into each language rather than
-  pasted in the source language.
-- The phone number is a landline, so the site offers `tel:` links only — no WhatsApp button.
-- The business has no website, so the "listing" links point at its Google Maps entry.
-- The workshop photo is credited to its author in the hero, as the source requires.
+Pushing to `main` runs `.github/workflows/deploy-aws.yml`: it builds the site, authenticates
+to AWS with OIDC (no stored keys) and uploads to
+`s3://dr-static-websites/vilanovailageltru.info/vilanovacarpentry/`. The subdomain is served from the bucket's CDN, so a
+deploy is live within a few minutes.
 
-## Privacy
+## Technical notes
 
-Google Analytics 4 loads only after the visitor accepts. The banner calls
-`window.__analyticsConsent(true|false)`, which is the single place that writes the consent key
-(`cookie-consent-v1`); the embedded Google map uses the same decision and is injected as an
-iframe only after acceptance. With storage denied by default, no cookies are written before
-consent.
-
-## Accessibility and SEO
-
-- One `h1` per page, ordered headings, skip link, visible focus rings, labelled language
-  switcher and nav toggle, `aria-expanded` state, Escape closes the mobile nav.
-- Colour pairs meet WCAG AA for body and small text on their backgrounds.
-- `LocalBusiness` JSON-LD (`HomeAndConstructionBusiness`) with address, geo, phone and rating.
-- `hreflang` alternates for all three locales plus `x-default`; per-locale canonical;
-  `sitemap.xml`, `robots.txt`, web manifest.
-- All assets use relative paths so the site also works from a subdirectory prefix.
+- **SEO** — per-locale `<title>`, description, canonical, reciprocal `hreflang` including
+  `x-default`, Open Graph and Twitter cards, `sitemap.xml` with alternates, `robots.txt`, and
+  `LocalBusiness` structured data. Every absolute URL derives from the site's own domain.
+- **Accessibility** — one `h1` per page, skip link, landmark elements, visible focus rings,
+  body text at or above 4.5:1 contrast, `aria-expanded` on the navigation toggle, Escape
+  closes the drawer, and content stays readable with JavaScript disabled.
+- **Performance** — self-hosted woff2 subsets preloaded, one CSS file, one deferred JS file,
+  no third-party requests until the visitor opts in.
+- **Privacy** — the cookie notice offers accept and reject. Nothing is fetched from Google —
+  analytics script or map iframe — until the visitor accepts; rejecting loads neither and is
+  remembered.
