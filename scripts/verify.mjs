@@ -158,6 +158,122 @@ for (const l of LANGS) {
           flagsInside: flagsInside,
         };
       })(),
+      /* Contrast of every visible text element against its real painted background.
+         A section that loses its dark background (e.g. a class dropped while adding a
+         descriptive name) leaves white text on cream at 1.08:1, which no other
+         assertion notices. */
+      lowContrast: (function () {
+        function lum(c) {
+          var m = (c || "").match(/\d+(\.\d+)?/g);
+          if (!m || m.length < 3) return null;
+          var v = m.slice(0, 3).map(function (x) {
+            x = Number(x) / 255;
+            return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+          });
+          return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+        }
+        /* Composite the background stack rather than returning the first opaque
+           colour: a white-on-dark card uses rgba(255,255,255,.06) over a dark
+           section, and reading only the overlay reports 1:1 for text that is fine. */
+        function bgOf(el) {
+          var layers = [];
+          var e = el;
+          while (e) {
+            var c = getComputedStyle(e).backgroundColor;
+            var m = (c || "").match(/\d+(\.\d+)?/g);
+            if (m && Number(m[3] === undefined ? 1 : m[3]) > 0.05) {
+              layers.push({ rgb: m.slice(0, 3).map(Number), a: m.length > 3 ? Number(m[3]) : 1 });
+              if (layers[layers.length - 1].a >= 0.999) break;
+            }
+            e = e.parentElement;
+          }
+          var base = [255, 255, 255];
+          for (var i = layers.length - 1; i >= 0; i--) {
+            var L = layers[i];
+            base = [0, 1, 2].map(function (k) { return L.rgb[k] * L.a + base[k] * (1 - L.a); });
+          }
+          return "rgb(" + base.map(function (v) { return Math.round(v); }).join(",") + ")";
+        }
+        var bad = [];
+        document.querySelectorAll("main p, main h1, main h2, main h3, main dt, main dd, main li, main a, main span, main figcaption, footer p, footer a").forEach(function (el) {
+          if (el.querySelector("p,h1,h2,h3,dt,dd,li,a,span,figcaption")) return;
+          var text = (el.textContent || "").trim();
+          if (text.length < 2) return;
+          var cs = getComputedStyle(el);
+          if (cs.visibility === "hidden" || cs.display === "none") return;
+          if (Number(cs.opacity) < 0.5) return;
+          /* When an ancestor paints a gradient, the composited background-color is
+             the page default and tells us nothing. Parse the gradient's own colour
+             stops and judge against the worst one for this text colour. */
+          /* Only fall back to gradient parsing when nothing between the text and the
+             root paints a solid colour. A white card inside a dark hero resolves to
+             white here, which is correct and must not be overridden. */
+          /* A background-image closer to the text than any opaque colour is the real
+             ground. body usually has an opaque cream, which would otherwise win and
+             make white hero text look like it sits on cream. */
+          var solidFound = false, probeEl = el, gradientFirst = false;
+          while (probeEl) {
+            var pcs = getComputedStyle(probeEl);
+            var pm = (pcs.backgroundColor || "").match(/\d+(\.\d+)?/g);
+            var opaque = pm && Number(pm.length > 3 ? pm[3] : 1) >= 0.9;
+            var hasImg = pcs.backgroundImage && pcs.backgroundImage !== "none";
+            if (hasImg) { gradientFirst = true; break; }
+            if (opaque) { solidFound = true; break; }
+            probeEl = probeEl.parentElement;
+          }
+          if (gradientFirst) solidFound = false;
+          var bg = bgOf(el);
+          var m0 = bg.match(/\d+/g).map(Number);
+          if (!solidFound) {
+            var g = el;
+            while (g) {
+              var gcs = getComputedStyle(g);
+              if (gcs.backgroundImage && gcs.backgroundImage !== "none") {
+                /* Only opaque stops are a ground colour. A decorative grid overlay
+                   uses rgba(...,.5) and transparent, and treating `transparent` as
+                   black invents a contrast failure that is not there. */
+                var stops = (gcs.backgroundImage.match(/rgba?\([^)]+\)/g) || [])
+                  .filter(function (c) { return !/rgba?\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)/.test(c); })
+                  .map(function (c) {
+                    var mm = c.match(/\d+(\.\d+)?/g);
+                    var a = mm.length > 3 ? Number(mm[3]) : 1;
+                    if (a < 0.35) return null;   /* too faint to be a ground */
+                    return [Number(mm[0]), Number(mm[1]), Number(mm[2])];
+                  })
+                  .filter(Boolean);
+                if (!stops.length) { g = g.parentElement; continue; }
+                var textL = lum(cs.color);
+                var worst = null;
+                stops.forEach(function (st) {
+                  var sl = lum("rgb(" + st.join(",") + ")");
+                  var r2 = (Math.max(textL, sl) + 0.05) / (Math.min(textL, sl) + 0.05);
+                  if (worst === null || r2 < worst) worst = r2;
+                });
+                if (worst !== null) {
+                  var size0 = parseFloat(cs.fontSize);
+                  var large0 = size0 >= 24 || (size0 >= 18.66 && Number(cs.fontWeight) >= 700);
+                  if (worst < (large0 ? 3 : 4.5)) {
+                    bad.push({ text: text.slice(0, 24), ratio: Math.round(worst * 100) / 100 });
+                  }
+                }
+                g = null;
+                break;
+              }
+              g = g.parentElement;
+            }
+            return;
+          }
+          var L1 = lum(cs.color), L2 = lum(bg);
+          if (L1 === null || L2 === null) return;
+          var ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+          var size = parseFloat(cs.fontSize);
+          var large = size >= 24 || (size >= 18.66 && Number(cs.fontWeight) >= 700);
+          if (ratio < (large ? 3 : 4.5)) {
+            bad.push({ text: text.slice(0, 24), ratio: Math.round(ratio * 100) / 100 });
+          }
+        });
+        return bad.slice(0, 6);
+      })(),
       wrapPaddingLeft: parseFloat(getComputedStyle(document.querySelector(".wrap")).paddingLeft) || 0,
       wrapMaxWidth: getComputedStyle(document.querySelector(".wrap")).maxWidth,
       /* Flat values, not an IIFE returning an object: an IIFE here serialises as an empty
@@ -229,6 +345,9 @@ for (const l of LANGS) {
     `named=${info.namedSections} of ${info.totalSections} — ${info.sectionNames.join(", ")}`);
   // Layout guard: a missing --pad/--wrap token renders content flush to the viewport
   // edge, which looks broken but passes every content assertion.
+  ok((info.lowContrast || []).length === 0, `[${l.code}] all visible text meets contrast`,
+    (info.lowContrast || []).map((b) => `"${b.text}" ${b.ratio}:1`).join(", "));
+
   ok(info.wrapPaddingLeft >= 8, `[${l.code}] page content has side padding`,
     `wrap padding-left=${info.wrapPaddingLeft}px`);
   ok(!!info.wrapMaxWidth && info.wrapMaxWidth !== "none",

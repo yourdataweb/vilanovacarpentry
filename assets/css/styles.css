@@ -703,12 +703,18 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   border: 1px solid rgba(33, 21, 12, .35);
   box-shadow: var(--shadow);
 }
+/* A label over a wood sample: the pale timbers (pine, ply) need dark text and the
+   dark ones need light, so each swatch carries its own label colour. */
 .swatch span {
   position: relative;
   font-size: .82rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, .95);
-  text-shadow: 0 1px 3px rgba(33, 21, 12, .85);
+  color: rgba(255, 255, 255, .97);
+  text-shadow: 0 1px 3px rgba(20, 12, 6, .9);
+}
+.swatch--pine span, .swatch--ply span {
+  color: #241708;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, .55);
 }
 .swatch--pine {
   background:
@@ -718,7 +724,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .swatch--oak {
   background:
     repeating-linear-gradient(88deg, rgba(90, 52, 24, .35) 0 2px, transparent 2px 16px),
-    linear-gradient(150deg, #a9743f, #7b4d27);
+    linear-gradient(150deg, #8f5c32, #6b4222);
 }
 .swatch--ply {
   background:
