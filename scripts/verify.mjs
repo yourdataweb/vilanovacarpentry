@@ -352,6 +352,16 @@ for (const l of LANGS) {
   await new Promise((r) => setTimeout(r, 6000));
   ok(gaReqs.some((u) => /collect/.test(u)), `[${l.code}] analytics sends a collect request after consent`,
     `requests=${gaReqs.length}`);
+  ok(gaReqs.some((u) => /tid=G-71LT2Q093H/.test(u)), `[${l.code}] collect hit names the right property`);
+  /* Every generated site shares one parent domain. Without cookie_domain:'none'
+     GA writes _ga on .vilanovailageltru.info, so one visitor is the same client id
+     across thirteen unrelated businesses and each property over-counts the others. */
+  const gaIc = await gaPage.cookies();
+  const parentScoped = gaIc.filter(
+    (c) => /^_ga/.test(c.name) && c.domain.replace(/^\./, "") === new URL(SITE_URL).hostname.split(".").slice(1).join(".")
+  );
+  ok(parentScoped.length === 0, `[${l.code}] analytics cookies scoped per host, not the shared parent domain`,
+    parentScoped.map((c) => `${c.name}@${c.domain}`).join(", "));
   await gaCtx.close();
 
   // Shared components must be vendored and not locally modified: a site that drifted
