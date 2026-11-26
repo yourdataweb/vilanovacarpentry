@@ -3,6 +3,10 @@
 (function () {
   "use strict";
 
+  /* Content is visible by default; the scroll-reveal only hides it when this
+     class is present, so a no-JS or failed-script visitor still reads the page. */
+  document.documentElement.classList.add("js");
+
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- mobile nav ---------- */

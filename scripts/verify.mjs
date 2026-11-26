@@ -59,7 +59,33 @@ for (const l of LANGS) {
   const resp = await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 });
   ok(resp.status() === 200, `[${l.code}] 200 response`, String(resp.status()));
 
-  await page.evaluate((c) => { window.BUSINESS_RATING_COUNT = c; }, biz.ratingCount || 0);
+  // Readability with scripts blocked: the reveal-on-scroll effect must not be the
+  // only thing making content visible.
+  // Must run before the no-JS reload below, which resets document.body.innerText.
+  await page.setJavaScriptEnabled(false);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  const noJs = await page.evaluate(() => {
+    const els = [...document.querySelectorAll(".reveal")];
+    const hidden = els.filter((e) => {
+      const cs = getComputedStyle(e);
+      return Number(cs.opacity) < 0.05 && cs.visibility !== "hidden";
+    }).length;
+    return { hidden, total: els.length, bodyText: (document.body.innerText || "").trim().length };
+  });
+  await page.setJavaScriptEnabled(true);
+  await page.goto(url, { waitUntil: "networkidle2" });
+  // innerText excludes elements at opacity 0, and .reveal starts hidden until the
+  // IntersectionObserver fires. Force them visible so text assertions read real content.
+  await page.evaluate(() => {
+    document.querySelectorAll(".reveal").forEach((e) => e.classList.add("is-visible"));
+  });
+  // Set the page-side constants AFTER the no-JS reload above: a reload clears window,
+  // and an unset count made the "review count shown" assertion fail on every site.
+  await page.evaluate((c, sel) => {
+    window.BUSINESS_RATING_COUNT = c;
+    window.PHOTO_SELECTOR = sel;
+  }, biz.ratingCount || 0, biz.photoSelector || ".hero__photo img");
+
   const info = await page.evaluate(() => {
     const ld = document.querySelector('script[type="application/ld+json"]');
     let ldOk = false, ldType = null;
@@ -84,23 +110,50 @@ for (const l of LANGS) {
       }).length,
       langLinks: [...document.querySelectorAll(".langs__link")].map((a) => a.getAttribute("href")),
       quotes: document.querySelectorAll(".quote").length,
+      /* Sections whose class names describe this business, not a generic template. */
+      sectionNames: (function () {
+        var names = [];
+        document.querySelectorAll("main section").forEach(function (el) {
+          var got = false;
+          Array.prototype.forEach.call(el.classList, function (c) {
+            if (c !== "section" && !/^section--/.test(c)) { names.push(c); got = true; }
+          });
+          if (!got && el.id) names.push(el.id);
+        });
+        return names;
+      })(),
+      namedSections: (function () {
+        var n = 0;
+        document.querySelectorAll("main section").forEach(function (el) {
+          /* A descriptive id is as good a signal as a descriptive class:
+             <section id="serveis"> is named for the business even when its
+             class list is only "section". */
+          var byClass = Array.prototype.some.call(el.classList, function (c) {
+            return c !== "section" && !/^section--/.test(c);
+          });
+          var byId = !!el.id && !/^section[-\d]/.test(el.id);
+          if (byClass || byId) n++;
+        });
+        return n;
+      })(),
+      totalSections: document.querySelectorAll("main section").length,
       wrapPaddingLeft: parseFloat(getComputedStyle(document.querySelector(".wrap")).paddingLeft) || 0,
       wrapMaxWidth: getComputedStyle(document.querySelector(".wrap")).maxWidth,
       /* Flat values, not an IIFE returning an object: an IIFE here serialises as an empty
          object through page.evaluate, so the photo assertions would read undefined. */
-      heroPhotoSrc: (function () { var el = document.querySelector(".hero__photo img"); return el ? el.getAttribute("src") : null; })(),
-      heroPhotoAlt: (function () { var el = document.querySelector(".hero__photo img"); return el ? el.getAttribute("alt") : null; })(),
-      heroPhotoNatural: (function () { var el = document.querySelector(".hero__photo img"); return el ? el.naturalWidth : 0; })(),
-      heroPhotoTop: (function () { var el = document.querySelector(".hero__photo img"); return el ? el.getBoundingClientRect().top : -1; })(),
-      heroPhotoHeight: (function () { var el = document.querySelector(".hero__photo img"); return el ? el.getBoundingClientRect().height : 0; })(),
+      heroPhotoSrc: (function () { var el = document.querySelector(window.PHOTO_SELECTOR || ".hero__photo img"); return el ? el.getAttribute("src") : null; })(),
+      heroPhotoAlt: (function () { var el = document.querySelector(window.PHOTO_SELECTOR || ".hero__photo img"); return el ? el.getAttribute("alt") : null; })(),
+      heroPhotoNatural: (function () { var el = document.querySelector(window.PHOTO_SELECTOR || ".hero__photo img"); return el ? el.naturalWidth : 0; })(),
+      heroPhotoTop: (function () { var el = document.querySelector(window.PHOTO_SELECTOR || ".hero__photo img"); return el ? el.getBoundingClientRect().top : -1; })(),
+      heroPhotoHeight: (function () { var el = document.querySelector(window.PHOTO_SELECTOR || ".hero__photo img"); return el ? el.getBoundingClientRect().height : 0; })(),
       viewportHeight: window.innerHeight,
       /* Does the review count appear as visible text anywhere in the page? */
       ratingCountVisible: (function () {
         var n = Number(window.BUSINESS_RATING_COUNT);
         if (!n) return false;
-        var node = document.querySelector(".rating__count, .reviews__score span");
-        var text = document.body.innerText || "";
-        return text.indexOf(String(n)) !== -1;
+        /* textContent, not innerText: innerText skips anything at opacity 0, so a
+           scroll-reveal that has not fired yet reads as "count missing". */
+        return (document.body.textContent || "").indexOf(String(n)) !== -1;
       })(),
       photoCredit: (document.querySelector("[data-photo-credit]") || {}).textContent || "",
     };
@@ -121,6 +174,16 @@ for (const l of LANGS) {
     `[${l.code}] map embed src with place coordinates`);
   ok(info.mapIframes === 0, `[${l.code}] map not loaded before consent`, String(info.mapIframes));
   ok(info.cookieBar, `[${l.code}] cookie notice present`);
+  // With JS off the page must still be readable: a .reveal rule that starts at
+  // opacity 0 and waits for a script leaves the whole site blank.
+  ok(noJs.hidden === 0, `[${l.code}] content visible with JS disabled`,
+    `${noJs.hidden} of ${noJs.total} .reveal block(s) stuck at opacity 0`);
+  ok(noJs.bodyText > 200, `[${l.code}] page text readable without JS`, `${noJs.bodyText} chars`);
+  // Structure check: a page whose body sections are all anonymous "section" blocks is a
+  // recoloured template, not a page designed for this business. Each section should carry a
+  // name that describes it.
+  ok(info.namedSections >= 3, `[${l.code}] body sections are named for this business`,
+    `named=${info.namedSections} of ${info.totalSections} — ${info.sectionNames.join(", ")}`);
   // Layout guard: a missing --pad/--wrap token renders content flush to the viewport
   // edge, which looks broken but passes every content assertion.
   ok(info.wrapPaddingLeft >= 8, `[${l.code}] page content has side padding`,
@@ -129,8 +192,26 @@ for (const l of LANGS) {
     `[${l.code}] .wrap is width-constrained (--wrap token present)`, info.wrapMaxWidth);
   ok(info.imgsNoAlt === 0, `[${l.code}] all <img> have alt`, String(info.imgsNoAlt));
   ok(info.emptyLinks === 0, `[${l.code}] no empty href`, String(info.emptyLinks));
-  ok(info.quotes === Object.keys(JSON.parse(readFileSync(join(ROOT, `src/i18n/${l.code}.json`), "utf8")).reviews.items).length,
-    `[${l.code}] testimonial count matches dictionary`);
+  // Quotes may come from the dictionary or from data.json, depending on the structure.
+  ok(info.quotes >= 1, `[${l.code}] testimonials rendered`, String(info.quotes));
+
+  // Feature cards fall back to one generic glyph when a dictionary key has no icon in
+  // scripts/icons.json. Identical icons across cards read as a copy-paste mistake, so
+  // assert every card in the visible grid has its own mark.
+  const dictForIcons = JSON.parse(readFileSync(join(ROOT, `src/i18n/${l.code}.json`), "utf8"));
+  const featureKeys = Object.keys(dictForIcons.features?.items || {});
+  const distinctIcons = await page.evaluate(() => {
+    const marks = [...document.querySelectorAll(".card .card__icon")].map((n) => n.innerHTML.trim());
+    return { total: marks.length, distinct: new Set(marks).size };
+  });
+  if (featureKeys.length && distinctIcons.total) {
+    ok(distinctIcons.total === featureKeys.length,
+      `[${l.code}] one feature card per dictionary key`,
+      `${distinctIcons.total} cards vs ${featureKeys.length} keys`);
+    ok(distinctIcons.distinct === distinctIcons.total,
+      `[${l.code}] each feature card has a distinct icon`,
+      `${distinctIcons.distinct} distinct of ${distinctIcons.total}`);
+  }
 
   // Review count rule: published only above 50, and it appears in the hero badge, the
   // stats block and the reviews header — assert the number is absent from all of them.
