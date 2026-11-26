@@ -1,0 +1,130 @@
+name: Deploy to AWS S3
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # OIDC token for the AWS role; no long-lived keys in the repo
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+# Each site is served from https://<code-name>.vilanovailageltru.info/ — the wildcard
+# subdomain resolves any code name, so only the prefix below changes per site.
+env:
+  AWS_REGION: eu-south-2 # bucket dr-static-websites lives in Spain
+  S3_BUCKET: dr-static-websites
+  S3_PREFIX: vilanovailageltru.info/vilanovacarpentry # replace with the site's code name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Build before authenticating: a broken build must never reach the point
+      # where the live copy has been cleared.
+      - name: Build the production version
+        run: node scripts/build.mjs
+
+      - name: Fail on unresolved template holes or markers
+        run: |
+          files="index.html"
+          for f in */index.html; do [ "$f" != "index.html" ] && files="$files $f"; done
+          if grep -qE '\{\{[a-zA-Z0-9_.]+\}\}' $files; then
+            echo "::error::Unresolved {{i18n}} holes in generated HTML"
+            grep -oE '\{\{[a-zA-Z0-9_.]+\}\}' $files | sort -u
+            exit 1
+          fi
+          if grep -qE '<!--(SOCIAL|LANG|WHATSAPP_[A-Z_]+|RATING_[A-Z_]+|CAPABILITIES|REVIEWS|DISHES|HERO_PHOTO|PHOTO_CREDIT|HREFLANG|OG_ALTERNATES|FACT_[A-Z_]+)-->' $files; then
+            echo "::error::Unresolved template markers in generated HTML"
+            grep -oE '<!--(SOCIAL|LANG|WHATSAPP_[A-Z_]+|RATING_[A-Z_]+|CAPABILITIES|REVIEWS|DISHES|HERO_PHOTO|PHOTO_CREDIT|HREFLANG|OG_ALTERNATES|FACT_[A-Z_]+)-->' $files | sort -u
+            exit 1
+          fi
+
+      - name: Authenticate to AWS
+        uses: aws-actions/configure-aws-credentials@45666896f5d8e0f10ae255413f3a4cdd03bdc8f5 # v6.3.1
+        with:
+          role-to-assume: arn:aws:iam::167823666738:role/github-static-websites-publisher
+          aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: true
+
+      - name: Clear the current version from the bucket path
+        run: |
+          set -euo pipefail
+          aws s3 rm "s3://$S3_BUCKET/$S3_PREFIX/" --recursive --only-show-errors
+          echo "Cleared s3://$S3_BUCKET/$S3_PREFIX/"
+
+      - name: Upload the production version
+        run: |
+          set -euo pipefail
+          # Only what the site serves: pages, locale dirs, assets, sitemap, manifest.
+          # Sources, CI config and repo docs stay out of the bucket.
+          aws s3 sync . "s3://$S3_BUCKET/$S3_PREFIX/" --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude "node_modules/*" \
+            --exclude "src/*" \
+            --exclude "scripts/*" \
+            --exclude "tmp/*" \
+            --exclude "*.md" \
+            --exclude ".gitignore" \
+            --exclude "package*.json" \
+            --cache-control "public, max-age=300, must-revalidate" \
+            --only-show-errors
+
+          # Self-hosted fonts, when present, never change under the same name.
+          if [ -d assets/fonts ]; then
+            aws s3 sync assets/fonts "s3://$S3_BUCKET/$S3_PREFIX/assets/fonts" --delete \
+              --cache-control "public, max-age=31536000, immutable" --only-show-errors
+          fi
+
+          # HTML must revalidate so a deploy is visible immediately.
+          aws s3 cp index.html "s3://$S3_BUCKET/$S3_PREFIX/index.html" \
+            --cache-control "public, max-age=0, must-revalidate" --only-show-errors
+          for f in */index.html; do
+            aws s3 cp "$f" "s3://$S3_BUCKET/$S3_PREFIX/$f" \
+              --cache-control "public, max-age=0, must-revalidate" --only-show-errors
+          done
+          for f in sitemap.xml robots.txt manifest.webmanifest site.webmanifest; do
+            if [ -f "$f" ]; then
+              aws s3 cp "$f" "s3://$S3_BUCKET/$S3_PREFIX/$f" \
+                --cache-control "public, max-age=300, must-revalidate" --only-show-errors
+            fi
+          done
+
+      - name: Verify every deployed file
+        run: |
+          set -euo pipefail
+          missing=0
+          keys="index.html sitemap.xml robots.txt"
+          for f in */index.html; do keys="$keys $f"; done
+          # Derive the asset keys from the build output so a site whose script or
+          # stylesheet has a different name is not reported as missing.
+          css=$(grep -oE 'assets/css/[a-z0-9._-]+\.css' index.html | head -1)
+          js=$(grep -oE 'assets/js/[a-z0-9._-]+\.js' index.html | head -1)
+          for key in $keys ${css:-assets/css/styles.css} ${js:-assets/js/app.js} \
+                     assets/photos/handover.png; do
+            size=$(aws s3api head-object --bucket "$S3_BUCKET" --key "$S3_PREFIX/$key" \
+                     --query 'ContentLength' --output text 2>/dev/null || echo MISSING)
+            if [ "$size" = "MISSING" ]; then
+              echo "::error::missing in S3: $S3_PREFIX/$key"
+              missing=$((missing + 1))
+            else
+              echo "ok  $key  ($size bytes)"
+            fi
+          done
+          if [ "$missing" -gt 0 ]; then
+            echo "::error::$missing expected file(s) missing from s3://$S3_BUCKET/$S3_PREFIX/"
+            exit 1
+          fi

@@ -1,0 +1,177 @@
+{
+  "lang": "es",
+  "locale": "es_ES",
+  "ogLocale": "es_ES",
+  "pathPrefix": "../",
+  "meta": {
+    "title": "Vilanova Carpentry SL · Carpintería y materiales en Vilanova i la Geltrú",
+    "description": "Taller de carpintería en Carrer d'Eusebi Millan, Vilanova i la Geltrú. Muebles a medida, armarios empotrados, puertas, cocinas y carpintería para obra. Presupuesto por teléfono: 938 14 23 19.",
+    "ogAlt": "Vilanova Carpentry SL, taller de carpintería y materiales en Vilanova i la Geltrú"
+  },
+  "brand": {
+    "sub": "Carpintería · Vilanova i la Geltrú"
+  },
+  "nav": {
+    "workshop": "El taller",
+    "work": "Qué hacemos",
+    "process": "Cómo trabajamos",
+    "reviews": "Opiniones",
+    "contact": "Contacto",
+    "skip": "Ir al contenido principal",
+    "label": "Navegación principal"
+  },
+  "hero": {
+    "eyebrow": "Carrer d'Eusebi Millan · Vilanova i la Geltrú",
+    "title": "Madera cortada a medida, hecha en nuestro taller",
+    "subtitle": "Un obrador de carpintería y almacén de materiales en Vilanova. Piezas únicas para casa y trabajos para obra, con el consejo de quien trabaja la madera cada día.",
+    "ctaPrimary": "Llamar al taller",
+    "ctaSecondary": "Cómo llegar",
+    "fact1": "Muebles, armarios y puertas a medida",
+    "fact2": "Cortes y ajustes de piezas pequeñas",
+    "fact3": "Tarjeta, pago móvil y entrada accesible",
+    "viewOnGoogle": "Ver la ficha en Google",
+    "photoAlt": "Vista del taller de carpintería y del material apilado",
+    "photoCredit": "Foto"
+  },
+  "about": {
+    "eyebrow": "El taller",
+    "title": "Un obrador de barrio donde la madera todavía se elige a mano",
+    "lead": "Vilanova Carpentry SL es un taller de carpintería y almacén de materiales en Carrer d'Eusebi Millan. Viene quien busca una pieza concreta y quien necesita a alguien que le resuelva el encargo entero.",
+    "body1": "El trabajo sale del propio obrador: se toman medidas en casa o en la obra, se prepara la pieza y se monta. Entre el almacén y el banco de trabajo está lo que hace posible un trabajo bien acabado.",
+    "body2": "Los clientes destacan el trato y la capacidad de encontrar solución a cosas que no salen de catálogo. Si una pieza no está, miramos cómo hacerla.",
+    "fact1Value": "Taller propio",
+    "fact1Label": "cortar, montar y repasar",
+    "fact2Value": "Vilanova",
+    "fact2Label": "y la comarca del Garraf",
+    "fact3Value": "Carpintería para obra",
+    "fact3Label": "constructores e instaladores",
+    "fact4Value": "Material en almacén",
+    "fact4Label": "madera y tableros para llevar"
+  },
+  "features": {
+    "eyebrow": "Qué hacemos",
+    "title": "Del mueble grande al detalle de obra",
+    "lead": "El taller trabaja la madera en piezas grandes y en ensambles pequeños. Estos son los trabajos con más salida.",
+    "items": {
+      "furniture": {
+        "title": "Muebles a medida",
+        "text": "Estanterías, mesas, camas y piezas pensadas para un rincón concreto de casa, con las medidas que hagan falta."
+      },
+      "wardrobes": {
+        "title": "Armarios empotrados",
+        "text": "Armarios y vestidores que aprovechan el espacio del techo al suelo, con puertas correderas o batientes."
+      },
+      "doors": {
+        "title": "Puertas y ventanas",
+        "text": "Puertas de interior, marcos y carpintería de madera para rehabilitaciones y cambios de imagen."
+      },
+      "kitchens": {
+        "title": "Cocinas",
+        "text": "Frontales, muebles bajos y altos, y piezas de madera maciza para completar o rehacer una cocina."
+      },
+      "builders": {
+        "title": "Carpintería para obra",
+        "text": "Cortes, ensambles y piezas a medida para constructores, albañiles e instaladores de la comarca."
+      },
+      "repairs": {
+        "title": "Reparaciones y ajustes",
+        "text": "Piezas que bailan, puertas que rozan, patas que sobran: se reparan o se vuelven a hacer."
+      }
+    }
+  },
+  "menu": {
+    "eyebrow": "Cómo trabajamos",
+    "title": "Un encargo, cuatro pasos",
+    "lead": "Cada trabajo empieza con una conversación y acaba con la pieza montada. Este es el camino habitual.",
+    "note": "El presupuesto es previo y sin compromiso: si el número no le encaja, no se corta nada.",
+    "items": {
+      "measure": {
+        "title": "Tomar medidas",
+        "text": "Pasamos a ver el espacio o nos trae las medidas. Valoramos el material y cómo debe quedar la pieza.",
+        "number": "1"
+      },
+      "quote": {
+        "title": "Presupuesto claro",
+        "text": "Le decimos el precio antes de cortar nada, con el material, el acabado y el montaje que entran.",
+        "number": "2"
+      },
+      "make": {
+        "title": "Fabricar en el taller",
+        "text": "La pieza se hace en el obrador. Si el trabajo es grande, le explicamos los plazos reales desde el primer día.",
+        "number": "3"
+      },
+      "fit": {
+        "title": "Montar y repasar",
+        "text": "Llevamos el trabajo acabado, lo instalamos y repasamos los detalles con usted antes de darlo por cerrado.",
+        "number": "4"
+      }
+    }
+  },
+  "materials": {
+    "eyebrow": "Materiales y acabados",
+    "title": "Madera elegida, acabado cuidado",
+    "text": "Trabajamos maderas macizas y tableros para uso interior, y acabados al aceite o con barniz según dónde vaya la pieza. En el almacén hay madera para llevar y recortes para pruebas.",
+    "chip1": "Pino y abeto",
+    "chip2": "Roble",
+    "chip3": "Tablero contrachapado",
+    "chip4": "Aceite y barniz",
+    "note": "Si duda qué material aguanta mejor en su casa, pregúntelo en el taller antes de comprar."
+  },
+  "reviews": {
+    "eyebrow": "Opiniones",
+    "title": "Lo que dicen los clientes",
+    "lead": "Opiniones publicadas en la ficha de Google del taller, reproducidas tal como nos llegaron.",
+    "starsLabel": "{n} de 5 estrellas",
+    "reviewsWord": "opiniones",
+    "onGoogle": "en Google",
+    "readAll": "Leer todas las opiniones",
+    "items": {
+      "advice": {
+        "text": "Un trato increíble y muy contenta con el resultado. Quedan pocas empresas tan serias y profesionales como esta. Ángel tiene solución para todo y te sabe asesorar muy bien. Lo recomiendo 100%.",
+        "author": "Begoña Capilla",
+        "meta": "Hace un mes",
+        "stars": 5
+      },
+      "chair": {
+        "text": "Muy contento con el trabajo realizado. Me han hecho el favor de cortarme las patas de una silla y quedó justo como necesitaba. Fueron muy amables, rápidos y profesionales. ¡Muchas gracias por la atención y por el buen trabajo!",
+        "author": "Veronica Sáez",
+        "meta": "Hace dos meses",
+        "stars": 5
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contacto",
+    "title": "Hablar con el taller",
+    "lead": "El teléfono es la vía más rápida: cuéntenos qué necesita y le diremos si hay que venir a tomar medidas.",
+    "addressLabel": "Dirección",
+    "phoneLabel": "Teléfono",
+    "phoneNote": "Llamada directa al taller.",
+    "plusCodeLabel": "Plus code",
+    "listingLabel": "Ficha en Google",
+    "mapNote": "El mapa se carga cuando acepta las cookies. También puede abrir la ubicación en Google Maps.",
+    "mapLoad": "Cargar el mapa",
+    "mapTitle": "Mapa con la ubicación del taller",
+    "ctaCall": "Llamar al taller",
+    "ctaDirections": "Indicaciones"
+  },
+  "footer": {
+    "tagline": "Taller de carpintería y materiales para el hogar y la obra, en el corazón de Vilanova i la Geltrú.",
+    "navTitle": "Secciones",
+    "contactTitle": "Contacto",
+    "legalTitle": "Información",
+    "siteLink": "Ficha en Google",
+    "legal": "Este sitio solo usa cookies analíticas, y solo si las acepta. No recoge ningún otro dato personal.",
+    "rights": "Todos los derechos reservados."
+  },
+  "cookies": {
+    "policy": "Cookies",
+    "text": "Usamos cookies analíticas para saber cómo se consulta el sitio. Puede aceptarlas o seguir solo con las esenciales.",
+    "accept": "Aceptar",
+    "reject": "Solo esenciales"
+  },
+  "a11y": {
+    "langSwitch": "Cambio de idioma",
+    "menuToggle": "Abrir el menú"
+  }
+}

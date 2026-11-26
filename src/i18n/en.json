@@ -1,0 +1,177 @@
+{
+  "lang": "en",
+  "locale": "en_GB",
+  "ogLocale": "en_GB",
+  "pathPrefix": "../",
+  "meta": {
+    "title": "Vilanova Carpentry SL · Joinery workshop and timber in Vilanova i la Geltrú",
+    "description": "Joinery workshop and timber merchant on Carrer d'Eusebi Millan, Vilanova i la Geltrú. Made-to-measure furniture, fitted wardrobes, doors, kitchens and carpentry for builders. Quotes by phone: 938 14 23 19.",
+    "ogAlt": "Vilanova Carpentry SL, joinery workshop and timber merchant in Vilanova i la Geltrú"
+  },
+  "brand": {
+    "sub": "Joinery · Vilanova i la Geltrú"
+  },
+  "nav": {
+    "workshop": "The workshop",
+    "work": "What we make",
+    "process": "How we work",
+    "reviews": "Reviews",
+    "contact": "Contact",
+    "skip": "Skip to main content",
+    "label": "Main navigation"
+  },
+  "hero": {
+    "eyebrow": "Carrer d'Eusebi Millan · Vilanova i la Geltrú",
+    "title": "Timber cut to size, made in our own workshop",
+    "subtitle": "A joinery workshop and timber yard in Vilanova. One-off pieces for the home and carpentry for building sites, with advice from people who work the wood every day.",
+    "ctaPrimary": "Call the workshop",
+    "ctaSecondary": "Get directions",
+    "fact1": "Furniture, wardrobes and doors to measure",
+    "fact2": "Cuts and adjustments on small pieces",
+    "fact3": "Card, contactless payment and step-free entrance",
+    "viewOnGoogle": "See the Google listing",
+    "photoAlt": "View of the joinery workshop and stacked timber",
+    "photoCredit": "Photo"
+  },
+  "about": {
+    "eyebrow": "The workshop",
+    "title": "A neighbourhood workshop where timber is still picked by hand",
+    "lead": "Vilanova Carpentry SL is a joinery workshop and timber merchant on Carrer d'Eusebi Millan. People come for a single piece of wood, or for someone to take on the whole job.",
+    "body1": "The work comes out of the workshop itself: measurements are taken at home or on site, the piece is prepared, then fitted. Between the timber rack and the bench is what makes a clean finish possible.",
+    "body2": "Clients single out the way they are treated and the knack for solving things that are not in a catalogue. If a piece is not there, we work out how to make it.",
+    "fact1Value": "Own workshop",
+    "fact1Label": "cut, fit and finish",
+    "fact2Value": "Vilanova",
+    "fact2Label": "and the Garraf area",
+    "fact3Value": "Carpentry for builders",
+    "fact3Label": "builders and installers",
+    "fact4Value": "Timber in stock",
+    "fact4Label": "boards and lengths to take away"
+  },
+  "features": {
+    "eyebrow": "What we make",
+    "title": "From a full run of furniture to a site detail",
+    "lead": "The workshop handles timber in large pieces and small joints alike. These are the jobs that come through most often.",
+    "items": {
+      "furniture": {
+        "title": "Made-to-measure furniture",
+        "text": "Shelving, tables, beds and pieces built for one particular corner of a home, at whatever size it takes."
+      },
+      "wardrobes": {
+        "title": "Fitted wardrobes",
+        "text": "Wardrobes and walk-ins that use the space from ceiling to floor, with sliding or hinged doors."
+      },
+      "doors": {
+        "title": "Doors and windows",
+        "text": "Internal doors, frames and timber joinery for renovations and changes of look."
+      },
+      "kitchens": {
+        "title": "Kitchens",
+        "text": "Cabinet fronts, base and wall units, and solid timber pieces to complete or redo a kitchen."
+      },
+      "builders": {
+        "title": "Carpentry for builders",
+        "text": "Cuts, joints and pieces to measure for builders, plasterers and installers around the area."
+      },
+      "repairs": {
+        "title": "Repairs and adjustments",
+        "text": "Wobbly pieces, doors that catch, legs that need shortening: repaired, or made again."
+      }
+    }
+  },
+  "menu": {
+    "eyebrow": "How we work",
+    "title": "One job, four steps",
+    "lead": "Every job starts with a conversation and ends with the piece fitted. This is the usual route.",
+    "note": "The quote comes first and commits you to nothing: if the number does not suit you, nothing gets cut.",
+    "items": {
+      "measure": {
+        "title": "Measuring up",
+        "text": "We come and look at the space, or you bring us the measurements. We agree the material and how the piece should sit.",
+        "number": "1"
+      },
+      "quote": {
+        "title": "A clear quote",
+        "text": "You get the price before anything is cut, covering the material, the finish and the fitting.",
+        "number": "2"
+      },
+      "make": {
+        "title": "Made in the workshop",
+        "text": "The piece is built in the workshop. On a large job we tell you the realistic lead time from day one.",
+        "number": "3"
+      },
+      "fit": {
+        "title": "Fitting and finishing",
+        "text": "We bring the finished work, install it, and go over the details with you before calling it done.",
+        "number": "4"
+      }
+    }
+  },
+  "materials": {
+    "eyebrow": "Materials and finishes",
+    "title": "Timber chosen, finish worked through",
+    "text": "We work solid timber and boards for interior use, finished with oil or varnish depending on where the piece is going. The yard keeps timber to take away and offcuts for trials.",
+    "chip1": "Pine and fir",
+    "chip2": "Oak",
+    "chip3": "Plywood board",
+    "chip4": "Oil and varnish",
+    "note": "If you are unsure which material will hold up best in your home, ask at the workshop before buying."
+  },
+  "reviews": {
+    "eyebrow": "Reviews",
+    "title": "What customers say",
+    "lead": "Reviews posted on the workshop's Google listing, reproduced as they reached us.",
+    "starsLabel": "{n} out of 5 stars",
+    "reviewsWord": "reviews",
+    "onGoogle": "on Google",
+    "readAll": "Read all reviews",
+    "items": {
+      "advice": {
+        "text": "Incredible service and I am very happy with the result. There are few companies as serious and professional as this one. Angel has a solution for everything and gives excellent advice. I recommend him 100%.",
+        "author": "Begoña Capilla",
+        "meta": "A month ago",
+        "stars": 5
+      },
+      "chair": {
+        "text": "Very happy with the work done. They were kind enough to cut the legs off a chair for me, and it turned out exactly as I needed. They were very kind, quick and professional. Thank you for the attention and the good work.",
+        "author": "Veronica Sáez",
+        "meta": "Two months ago",
+        "stars": 5
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Talk to the workshop",
+    "lead": "The phone is the quickest route: tell us what you need and we will say whether a visit to measure up is required.",
+    "addressLabel": "Address",
+    "phoneLabel": "Phone",
+    "phoneNote": "Straight through to the workshop.",
+    "plusCodeLabel": "Plus code",
+    "listingLabel": "Google listing",
+    "mapNote": "The map loads once you accept cookies. You can also open the location in Google Maps.",
+    "mapLoad": "Load the map",
+    "mapTitle": "Map showing the workshop location",
+    "ctaCall": "Call the workshop",
+    "ctaDirections": "Directions"
+  },
+  "footer": {
+    "tagline": "Joinery workshop and timber for the home and for building sites, in the heart of Vilanova i la Geltrú.",
+    "navTitle": "Sections",
+    "contactTitle": "Contact",
+    "legalTitle": "Information",
+    "siteLink": "Google listing",
+    "legal": "This site uses analytics cookies only, and only if you accept them. It collects no other personal data.",
+    "rights": "All rights reserved."
+  },
+  "cookies": {
+    "policy": "Cookies",
+    "text": "We use analytics cookies to see how the site is used. You can accept them or carry on with essential cookies only.",
+    "accept": "Accept",
+    "reject": "Essential only"
+  },
+  "a11y": {
+    "langSwitch": "Language switch",
+    "menuToggle": "Open menu"
+  }
+}

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="{{meta.lang}}" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{meta.title}}</title>
+<meta name="description" content="{{meta.description}}">
+<meta name="author" content="{{business.name}}">
+<meta name="theme-color" content="#2a1c12">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{site.url}}/{{meta.canonicalPath}}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{business.name}}">
+<meta property="og:title" content="{{meta.title}}">
+<meta property="og:description" content="{{meta.description}}">
+<meta property="og:locale" content="{{meta.ogLocale}}">
+<meta property="og:url" content="{{site.url}}/{{meta.canonicalPath}}">
+<meta property="og:image" content="{{site.url}}/assets/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{t.meta.ogAlt}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{meta.title}}">
+<meta name="twitter:description" content="{{meta.description}}">
+<meta name="twitter:image" content="{{site.url}}/assets/img/og-image.jpg">
+
+{{#each alternates}}
+<link rel="alternate" hreflang="{{this.hreflang}}" href="{{@root.site.url}}/{{this.path}}">
+{{/each}}
+
+<link rel="icon" href="{{meta.assetBase}}assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{meta.assetBase}}assets/img/apple-touch-icon.png">
+<link rel="manifest" href="{{meta.assetBase}}site.webmanifest">
+<link rel="preload" href="{{meta.assetBase}}assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{meta.assetBase}}assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{meta.assetBase}}assets/css/styles.css">
+<script>
+  /* Google Analytics 4 with consent mode. Goes in <head> of every generated page,
+     before any other script. Nothing is fetched from Google until the visitor
+     accepts, and storage stays denied by default even if the tag loads elsewhere. */
+  (function () {
+    var ID = 'G-71LT2Q093H';
+    var KEY = 'cookie-consent-v1';
+    var accepted = false;
+    try { accepted = localStorage.getItem(KEY) === 'accepted'; } catch (e) {}
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    gtag('js', new Date());
+
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied'
+    });
+
+    function load() {
+      if (window.__gaLoaded) return;
+      window.__gaLoaded = true;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
+      document.head.appendChild(s);
+      gtag('config', ID);
+    }
+
+    function grant() {
+      load();
+      gtag('consent', 'update', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted'
+      });
+    }
+
+    /* The cookie banner calls this from BOTH buttons; nothing touches Google before it runs. */
+    window.__analyticsConsent = function (isAccepted) {
+      try { localStorage.setItem(KEY, isAccepted ? 'accepted' : 'essential'); } catch (e) {}
+      if (isAccepted) grant();
+    };
+
+    if (accepted) grant();
+  })();
+</script>
+<script type="application/ld+json">
+{{{jsonLd}}}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">{{t.nav.skip}}</a>
+
+<div class="topbar">
+  <div class="wrap topbar__inner">
+    <p class="topbar__note">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+      {{business.street}} · {{business.city}}
+    </p>
+    <div class="topbar__right">
+      <a class="topbar__tel" href="tel:{{business.phoneE164}}">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.7 2.1Z"/></svg>
+        {{business.phoneNational}}
+      </a>
+      <nav class="langs" aria-label="{{t.a11y.langSwitch}}">
+        {{#each langs}}
+        <a class="langs__link" href="{{this.href}}" hreflang="{{this.code}}" lang="{{this.code}}"{{#if this.current}} aria-current="true"{{/if}}>
+          <span class="langs__flag" aria-hidden="true">{{{this.flag}}}</span>
+          <span class="langs__code">{{this.code}}</span>
+          <span class="sr-only">{{this.name}}</span>
+        </a>
+        {{/each}}
+      </nav>
+    </div>
+  </div>
+</div>
+
+<header class="header">
+  <div class="wrap header__inner">
+    <a class="brand" href="{{meta.assetBase}}" aria-label="{{business.name}} — {{business.city}}">
+      <svg class="brand__mark" viewBox="0 0 40 40" width="38" height="38" aria-hidden="true">
+        <rect width="40" height="40" rx="9" fill="#2a1c12"/>
+        <path d="M9 28.5h22" stroke="#c8963e" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M13 24V13.5l7-3.5 7 3.5V24" stroke="#e8dcc9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17.5 24v-5.5h5V24" stroke="#a9743f" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">{{business.name}}</span>
+        <span class="brand__sub">{{t.brand.sub}}</span>
+      </span>
+    </a>
+    <nav class="nav" id="site-nav" data-open="false" aria-label="{{t.nav.label}}">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="#workshop">{{t.nav.workshop}}</a></li>
+        <li><a class="nav__link" href="#work">{{t.nav.work}}</a></li>
+        <li><a class="nav__link" href="#process">{{t.nav.process}}</a></li>
+        <li><a class="nav__link" href="#reviews">{{t.nav.reviews}}</a></li>
+        <li><a class="nav__link" href="#contact">{{t.nav.contact}}</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="{{t.a11y.menuToggle}}">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow hero__eyebrow">{{t.hero.eyebrow}}</p>
+        <h1 class="hero__title" id="hero-title">{{t.hero.title}}</h1>
+        <p class="hero__subtitle">{{t.hero.subtitle}}</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="tel:{{business.phoneE164}}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.7 2.1Z"/></svg>
+            {{t.hero.ctaPrimary}}
+          </a>
+          <a class="btn btn--light" href="{{links.directions}}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20 3 17V4l6 3 6-3 6 3v13l-6-3-6 3Z"/><path d="M9 7v13M15 4v13"/></svg>
+            {{t.hero.ctaSecondary}}
+          </a>
+        </div>
+        <ul class="hero__facts">
+          <li>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V9l7-4 7 4v12"/><path d="M9.5 21v-6h5v6"/></svg>
+            <span>{{t.hero.fact1}}</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9l4 4-9 9-4-4V6Z"/><path d="M13 6l5 5"/></svg>
+            <span>{{t.hero.fact2}}</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+            <span>{{t.hero.fact3}}</span>
+          </li>
+        </ul>
+      </div>
+      {{#if heroPhoto}}
+      <figure class="hero__photo">
+        <img src="{{meta.assetBase}}{{heroPhoto.src}}" alt="{{t.hero.photoAlt}}" width="640" height="360" fetchpriority="high" decoding="async">
+        {{#if heroPhoto.credit}}
+        <figcaption data-photo-credit>
+          {{t.hero.photoCredit}}:
+          {{#if heroPhoto.creditUrl}}<a href="{{heroPhoto.creditUrl}}" target="_blank" rel="noopener nofollow">{{heroPhoto.credit}}</a>{{else}}{{heroPhoto.credit}}{{/if}}
+        </figcaption>
+        {{/if}}
+      </figure>
+      {{/if}}
+      <div class="hero__plate">
+        <p class="hero__plateKicker">{{t.hero.viewOnGoogle}}</p>
+        <a class="hero__plateLink" href="{{links.place}}" target="_blank" rel="noopener">
+          {{business.name}}
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+        </a>
+        <p class="hero__plateMeta">{{business.street}} · {{business.postalCode}} {{business.city}}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="workshop" aria-labelledby="workshop-title">
+    <div class="wrap">
+      <div class="about__grid">
+        <div class="about__copy reveal">
+          <p class="eyebrow">{{t.about.eyebrow}}</p>
+          <h2 class="h2" id="workshop-title">{{t.about.title}}</h2>
+          <p class="lead">{{t.about.lead}}</p>
+          <p>{{t.about.body1}}</p>
+          <p>{{t.about.body2}}</p>
+        </div>
+        <dl class="facts reveal">
+          <div class="fact">
+            <dt class="fact__label">{{t.about.fact1Label}}</dt>
+            <dd class="fact__value fact__value--word">{{t.about.fact1Value}}</dd>
+          </div>
+          <div class="fact">
+            <dt class="fact__label">{{t.about.fact2Label}}</dt>
+            <dd class="fact__value fact__value--word">{{t.about.fact2Value}}</dd>
+          </div>
+          <div class="fact">
+            <dt class="fact__label">{{t.about.fact3Label}}</dt>
+            <dd class="fact__value fact__value--word">{{t.about.fact3Value}}</dd>
+          </div>
+          <div class="fact">
+            <dt class="fact__label">{{t.about.fact4Label}}</dt>
+            <dd class="fact__value fact__value--word">{{t.about.fact4Value}}</dd>
+          </div>
+
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--board" id="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">{{t.features.eyebrow}}</p>
+        <h2 class="h2" id="work-title">{{t.features.title}}</h2>
+        <p class="lead">{{t.features.lead}}</p>
+      </div>
+      <ul class="work-grid">
+        {{#each featureCards}}
+        <li class="card work-card reveal">
+          <span class="card__icon" aria-hidden="true">{{{this.icon}}}</span>
+          <h3>{{this.title}}</h3>
+          <p>{{this.text}}</p>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="process" aria-labelledby="process-title">
+    <div class="wrap">
+      <div class="process__head reveal">
+        <p class="eyebrow">{{t.menu.eyebrow}}</p>
+        <h2 class="h2" id="process-title">{{t.menu.title}}</h2>
+        <p class="lead">{{t.menu.lead}}</p>
+      </div>
+      <ol class="steps">
+        {{#each dishes}}
+        <li class="step reveal">
+          <span class="step__num" aria-hidden="true"></span>
+          <h3 class="step__title">{{this.title}}</h3>
+          <p class="step__text">{{this.text}}</p>
+        </li>
+        {{/each}}
+      </ol>
+      <p class="process__note">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+        {{t.menu.note}}
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--timber" id="materials" aria-labelledby="materials-title">
+    <div class="wrap">
+      <div class="materials__grid">
+        <div class="reveal">
+          <p class="eyebrow">{{t.materials.eyebrow}}</p>
+          <h2 class="h2" id="materials-title">{{t.materials.title}}</h2>
+          <p class="materials__text">{{t.materials.text}}</p>
+          <p class="materials__note">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 4 6 6.6 6 10a6 6 0 0 1-12 0c0-3.4 3-6 6-10Z"/></svg>
+            {{t.materials.note}}
+          </p>
+        </div>
+        <div class="swatches reveal" aria-hidden="true">
+          <div class="swatch swatch--pine"><span>{{t.materials.chip1}}</span></div>
+          <div class="swatch swatch--oak"><span>{{t.materials.chip2}}</span></div>
+          <div class="swatch swatch--ply"><span>{{t.materials.chip3}}</span></div>
+          <div class="swatch swatch--oil"><span>{{t.materials.chip4}}</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="reviews" aria-labelledby="reviews-title">
+    <div class="wrap">
+      <div class="reviews__head reveal">
+        <div>
+          <p class="eyebrow">{{t.reviews.eyebrow}}</p>
+          <h2 class="h2" id="reviews-title">{{t.reviews.title}}</h2>
+          <p class="lead">{{t.reviews.lead}}</p>
+        </div>
+        <div class="reviews__score">
+          <span class="reviews__star" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.45L12 17.4l-5.8 3.1 1.1-6.45-4.7-4.6 6.5-.95L12 2.6Z"/></svg>
+          </span>
+          <div>
+            <span class="reviews__value">{{business.ratingFormatted}}</span>
+            <span class="reviews__meta">{{business.ratingCount}} {{t.reviews.reviewsWord}} {{t.reviews.onGoogle}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="quotes">
+        {{#each quotes}}
+        <figure class="quote reveal">
+          <div class="quote__stars" aria-label="{{this.ratingLabel}}">
+            {{#each this.stars}}<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.45L12 17.4l-5.8 3.1 1.1-6.45-4.7-4.6 6.5-.95L12 2.6Z"/></svg>{{/each}}
+          </div>
+          <blockquote><p>{{this.text}}</p></blockquote>
+          <figcaption>
+            <span class="quote__avatar" aria-hidden="true">{{this.initial}}</span>
+            <span>
+              <strong>{{this.author}}</strong>
+              {{this.meta}}
+            </span>
+          </figcaption>
+        </figure>
+        {{/each}}
+      </div>
+      <a class="reviews__all" href="{{links.reviews}}" target="_blank" rel="noopener">
+        {{t.reviews.readAll}}
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <section class="section section--board" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div class="contact__grid">
+        <div class="reveal">
+          <p class="eyebrow">{{t.contact.eyebrow}}</p>
+          <h2 class="h2" id="contact-title">{{t.contact.title}}</h2>
+          <p class="lead">{{t.contact.lead}}</p>
+
+          <a class="contact__phone" href="tel:{{business.phoneE164}}">
+            <span class="contact__phoneIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.7 2.1Z"/></svg>
+            </span>
+            <span>
+              <span class="contact__phoneNum">{{business.phoneNational}}</span>
+              <span class="contact__phoneNote">{{t.contact.phoneNote}}</span>
+            </span>
+          </a>
+
+          <div class="contact-list">
+            <div class="contact-item">
+              <span class="contact-item__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <div>
+                <div class="contact-item__label">{{t.contact.addressLabel}}</div>
+                <div class="contact-item__value">
+                  <a href="{{links.directions}}" target="_blank" rel="noopener">{{business.street}}<br>{{business.postalCode}} {{business.city}}</a>
+                </div>
+                <div class="contact-item__meta">{{business.region}}, {{business.countryName}}</div>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <span class="contact-item__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" fill="none"/><path d="M4 9h16M9 4v16"/></svg>
+              </span>
+              <div>
+                <div class="contact-item__label">{{t.contact.plusCodeLabel}}</div>
+                <div class="contact-item__value">{{business.plusCode}}</div>
+                <div class="contact-item__meta">
+                  <a href="{{links.place}}" target="_blank" rel="noopener">{{t.contact.listingLabel}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact__actions">
+            <a class="btn btn--primary" href="tel:{{business.phoneE164}}">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.7 2.1Z"/></svg>
+              {{t.contact.ctaCall}}
+            </a>
+            <a class="btn btn--ghost" href="{{links.directions}}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20 3 17V4l6 3 6-3 6 3v13l-6-3-6 3Z"/><path d="M9 7v13M15 4v13"/></svg>
+              {{t.contact.ctaDirections}}
+            </a>
+          </div>
+        </div>
+
+        <div class="map-shell" id="map-shell" data-map-loaded="false">
+          <div class="map-placeholder">
+            <div class="map-placeholder__inner">
+              <span class="map-placeholder__pin" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <p>{{t.contact.mapNote}}</p>
+              <button class="btn btn--primary" type="button" data-map-load>{{t.contact.mapLoad}}</button>
+            </div>
+          </div>
+          <template id="map-template">
+            <iframe title="{{t.contact.mapTitle}}" src="{{links.mapEmbed}}" width="600" height="480" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          </template>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <a class="brand" href="{{meta.assetBase}}">
+          <svg class="brand__mark" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true">
+            <rect width="40" height="40" rx="9" fill="#3a2718"/>
+            <path d="M9 28.5h22" stroke="#c8963e" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M13 24V13.5l7-3.5 7 3.5V24" stroke="#efe4d4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17.5 24v-5.5h5V24" stroke="#a9743f" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="brand__text"><span class="brand__name">{{business.name}}</span></span>
+        </a>
+        <p>{{t.footer.tagline}}</p>
+      </div>
+      <div>
+        <h2>{{t.footer.navTitle}}</h2>
+        <ul>
+          <li><a href="#workshop">{{t.nav.workshop}}</a></li>
+          <li><a href="#work">{{t.nav.work}}</a></li>
+          <li><a href="#process">{{t.nav.process}}</a></li>
+          <li><a href="#reviews">{{t.nav.reviews}}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>{{t.footer.contactTitle}}</h2>
+        <ul>
+          <li><a href="tel:{{business.phoneE164}}">{{business.phoneNational}}</a></li>
+          <li><a href="{{links.directions}}" target="_blank" rel="noopener">{{business.street}}</a></li>
+          <li>{{business.postalCode}} {{business.city}}</li>
+          <li><a href="{{links.place}}" target="_blank" rel="noopener">{{t.footer.siteLink}}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>{{t.footer.legalTitle}}</h2>
+        <ul>
+          <li><a href="#contact">{{t.nav.contact}}</a></li>
+          <li><a href="#" data-cookie-open>{{t.cookies.policy}}</a></li>
+          <li><a href="{{links.place}}" target="_blank" rel="noopener">{{t.contact.listingLabel}}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <p>{{t.footer.legal}}</p>
+      <p>© <span id="year">{{year}}</span> {{business.name}}. {{t.footer.rights}}</p>
+    </div>
+  </div>
+</footer>
+
+<div class="cookiebar" id="cookiebar" role="region" aria-label="{{t.cookies.policy}}" data-visible="false">
+  <p>{{t.cookies.text}}</p>
+  <div class="cookiebar__actions">
+    <button class="btn cookiebar__reject" type="button" data-cookie="essential">{{t.cookies.reject}}</button>
+    <button class="btn cookiebar__accept" type="button" data-cookie="accept">{{t.cookies.accept}}</button>
+  </div>
+</div>
+
+<script src="{{meta.assetBase}}assets/js/main.js" defer></script>
+</body>
+</html>

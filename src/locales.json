@@ -1,0 +1,5 @@
+[
+  {"code": "ca", "name": "Català", "dir": "", "default": true, "hreflang": "ca-ES"},
+  {"code": "es", "name": "Español", "dir": "es/", "hreflang": "es-ES"},
+  {"code": "en", "name": "English", "dir": "en/", "hreflang": "en-GB"}
+]

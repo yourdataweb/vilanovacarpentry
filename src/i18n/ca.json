@@ -1,0 +1,177 @@
+{
+  "lang": "ca",
+  "locale": "ca_ES",
+  "ogLocale": "ca_ES",
+  "pathPrefix": "./",
+  "meta": {
+    "title": "Vilanova Carpentry SL · Fusteria i materials a Vilanova i la Geltrú",
+    "description": "Taller de fusteria al Carrer d'Eusebi Millan, Vilanova i la Geltrú. Mobles a mida, armaris encastats, portes, cuines i fusteria per a obra. Pressupost per telèfon: 938 14 23 19.",
+    "ogAlt": "Vilanova Carpentry SL, taller de fusteria i materials a Vilanova i la Geltrú"
+  },
+  "brand": {
+    "sub": "Fusteria · Vilanova i la Geltrú"
+  },
+  "nav": {
+    "workshop": "El taller",
+    "work": "Què fem",
+    "process": "Com treballem",
+    "reviews": "Opinions",
+    "contact": "Contacte",
+    "skip": "Ves al contingut principal",
+    "label": "Navegació principal"
+  },
+  "hero": {
+    "eyebrow": "Carrer d'Eusebi Millan · Vilanova i la Geltrú",
+    "title": "Fusta tallada a mida, feta al nostre taller",
+    "subtitle": "Un obrador de fusteria i magatzem de materials a Vilanova. Peces úniques per a casa i feines per a obra, amb el consell de qui treballa la fusta cada dia.",
+    "ctaPrimary": "Trucar al taller",
+    "ctaSecondary": "Com arribar-hi",
+    "fact1": "Mobles, armaris i portes a mida",
+    "fact2": "Talls i ajustos de peces petites",
+    "fact3": "Targeta, pagament mòbil i entrada accessible",
+    "viewOnGoogle": "Veure la fitxa a Google",
+    "photoAlt": "Vista del taller de fusteria i del material apilat",
+    "photoCredit": "Foto"
+  },
+  "about": {
+    "eyebrow": "El taller",
+    "title": "Un obrador de barri on la fusta encara es tria a mà",
+    "lead": "Vilanova Carpentry SL és un taller de fusteria i magatzem de materials al Carrer d'Eusebi Millan. Hi arriba qui busca una peça concreta i qui necessita algú que li resolgui l'encàrrec sencer.",
+    "body1": "El treball surt del propi obrador: es prenen mides a casa o a l'obra, es prepara la peça i es munta. Entre el magatzem i el banc de treball hi ha el que fa possible una feina ben acabada.",
+    "body2": "Els clients en destaquen el tracte i la capacitat de trobar solució a coses que no surten de catàleg. Si una peça no hi és, mirem com fer-la.",
+    "fact1Value": "Taller propi",
+    "fact1Label": "tallar, muntar i repassar",
+    "fact2Value": "Vilanova",
+    "fact2Label": "i la comarca del Garraf",
+    "fact3Value": "Fusteria per a obra",
+    "fact3Label": "constructors i instal·ladors",
+    "fact4Value": "Material al magatzem",
+    "fact4Label": "fusta i taulers per emportar"
+  },
+  "features": {
+    "eyebrow": "Què fem",
+    "title": "Del moble gran al detall d'obra",
+    "lead": "El taller treballa la fusta en peces grans i en encaixos petits. Aquestes són les feines que hi tenen més sortida.",
+    "items": {
+      "furniture": {
+        "title": "Mobles a mida",
+        "text": "Prestatgeries, taules, llits i peces pensades per a un racó concret de casa, amb les mides que facin falta."
+      },
+      "wardrobes": {
+        "title": "Armaris encastats",
+        "text": "Armaris i vestidors que aprofiten l'espai del sostre al terra, amb portes corredisses o batents."
+      },
+      "doors": {
+        "title": "Portes i finestres",
+        "text": "Portes d'interior, marcs i fusteries de fusta per a rehabilitacions i canvis d'imatge."
+      },
+      "kitchens": {
+        "title": "Cuines",
+        "text": "Frontals, mobles baixos i alts, i peces de fusta massissa per completar o refer una cuina."
+      },
+      "builders": {
+        "title": "Fusteria per a obra",
+        "text": "Talls, encaixos i peces a mida per a constructors, paletes i instal·ladors de la comarca."
+      },
+      "repairs": {
+        "title": "Reparacions i ajustos",
+        "text": "Peces que ballen, portes que freguen, potes que sobren: es reparen o es tornen a fer."
+      }
+    }
+  },
+  "menu": {
+    "eyebrow": "Com treballem",
+    "title": "Un encàrrec, quatre passes",
+    "lead": "Cada feina comença amb una conversa i acaba amb la peça muntada. Aquest és el camí habitual.",
+    "note": "El pressupost és previ i sense compromís: si el número no li encaixa, no es talla res.",
+    "items": {
+      "measure": {
+        "title": "Prendre mides",
+        "text": "Passem a veure l'espai o ens porta les mides. Valorem el material i com ha de quedar la peça.",
+        "number": "1"
+      },
+      "quote": {
+        "title": "Pressupost clar",
+        "text": "Li diem el preu abans de tallar res, amb el material, l'acabat i el muntatge que hi entren.",
+        "number": "2"
+      },
+      "make": {
+        "title": "Fabricar al taller",
+        "text": "La peça es fa a l'obrador. Si el treball és gran, li expliquem els terminis reals des del primer dia.",
+        "number": "3"
+      },
+      "fit": {
+        "title": "Muntar i repassar",
+        "text": "Portem la feina acabada, la instal·lem i repassem els detalls amb vostè abans de donar-la per tancada.",
+        "number": "4"
+      }
+    }
+  },
+  "materials": {
+    "eyebrow": "Materials i acabats",
+    "title": "Fusta triada, acabat parlat",
+    "text": "Treballem fustes massisses i taulers per a ús interior, i acabats a l'oli o amb vernís segons on vagi la peça. Al magatzem hi ha fusta per emportar i retalls per a proves.",
+    "chip1": "Pi i avet",
+    "chip2": "Roure",
+    "chip3": "Tauler contraplacat",
+    "chip4": "Oli i vernís",
+    "note": "Si dubta quin material aguanta millor a casa seva, pregunti-ho al taller abans de comprar."
+  },
+  "reviews": {
+    "eyebrow": "Opinions",
+    "title": "El que diuen els clients",
+    "lead": "Opinions publicades a la fitxa de Google del taller, reproduïdes tal com ens van arribar.",
+    "starsLabel": "{n} de 5 estrelles",
+    "reviewsWord": "opinions",
+    "onGoogle": "a Google",
+    "readAll": "Llegir totes les opinions",
+    "items": {
+      "advice": {
+        "text": "Un tracte increïble i molt contenta amb el resultat. Queden poques empreses tan serioses i professionals com aquesta. L'Àngel té solució per a tot i et sap assessorar molt bé. El recomano al 100%.",
+        "author": "Begoña Capilla",
+        "meta": "Fa un mes",
+        "stars": 5
+      },
+      "chair": {
+        "text": "Molt content amb la feina feta. Em van fer el favor de tallar les potes d'una cadira i va quedar just com necessitava. Van ser molt amables, ràpids i professionals. Moltes gràcies per l'atenció i la bona feina.",
+        "author": "Veronica Sáez",
+        "meta": "Fa dos mesos",
+        "stars": 5
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "Contacte",
+    "title": "Parlar amb el taller",
+    "lead": "El telèfon és la via més ràpida: expliqui què necessita i li direm si cal venir a prendre mides.",
+    "addressLabel": "Adreça",
+    "phoneLabel": "Telèfon",
+    "phoneNote": "Trucada directa al taller.",
+    "plusCodeLabel": "Plus code",
+    "listingLabel": "Fitxa a Google",
+    "mapNote": "El mapa es carrega quan accepta les galetes. També pot obrir la ubicació a Google Maps.",
+    "mapLoad": "Carregar el mapa",
+    "mapTitle": "Mapa amb la ubicació del taller",
+    "ctaCall": "Trucar al taller",
+    "ctaDirections": "Indicacions"
+  },
+  "footer": {
+    "tagline": "Taller de fusteria i materials per a la llar i l'obra, al cor de Vilanova i la Geltrú.",
+    "navTitle": "Seccions",
+    "contactTitle": "Contacte",
+    "legalTitle": "Informació",
+    "siteLink": "Fitxa a Google",
+    "legal": "Aquest lloc només fa servir galetes analítiques, i només si les accepta. No recull cap altra dada personal.",
+    "rights": "Tots els drets reservats."
+  },
+  "cookies": {
+    "policy": "Galetes",
+    "text": "Fem servir galetes analítiques per saber com es consulta el lloc. Pot acceptar-les o continuar només amb les essencials.",
+    "accept": "Acceptar",
+    "reject": "Només essencials"
+  },
+  "a11y": {
+    "langSwitch": "Canvi d'idioma",
+    "menuToggle": "Obre el menú"
+  }
+}
