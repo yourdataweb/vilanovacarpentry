@@ -290,8 +290,11 @@ for (const l of LANGS) {
         var n = Number(window.BUSINESS_RATING_COUNT);
         if (!n) return false;
         /* textContent, not innerText: innerText skips anything at opacity 0, so a
-           scroll-reveal that has not fired yet reads as "count missing". */
-        return (document.body.textContent || "").indexOf(String(n)) !== -1;
+           scroll-reveal that has not fired yet reads as "count missing".
+           The count is locale-formatted ("1,009" in English, "1.009" in Catalan and
+           Spanish), so compare the digits with any separator removed. */
+        var text = (document.body.textContent || "").replace(/[.,\u00a0\u202f\s]/g, "");
+        return text.indexOf(String(n)) !== -1;
       })(),
       photoCredit: (document.querySelector("[data-photo-credit]") || {}).textContent || "",
     };
@@ -322,6 +325,34 @@ for (const l of LANGS) {
     `[${l.code}] every language pill shows its code`, `${info.langs.codes}/${info.langs.pills}`);
   ok(info.langs.h === 32, `[${l.code}] language switch is 32px tall at desktop`, `${info.langs.h}px`);
   ok(info.langs.pills === LANGS.length, `[${l.code}] one pill per locale`, String(info.langs.pills));
+
+  // Analytics: the page must carry the consent-gated snippet. Without this check a
+  // site shipped with no tracking code at all and still passed every assertion.
+  const html = readFileSync(join(ROOT, l.dir + "index.html"), "utf8");
+  ok(html.includes("G-71LT2Q093H"), `[${l.code}] analytics measurement id present`);
+  ok(/__analyticsConsent/.test(html), `[${l.code}] analytics consent hook exposed`);
+  ok(/gtag\('consent',\s*'default'/.test(html), `[${l.code}] consent defaults to denied`);
+  ok(!/googletagmanager\.com\/gtm\.js/.test(html), `[${l.code}] no GTM container snippet`);
+
+  // Behavioural proof, in a fresh context: no Google request before the choice.
+  const gaCtx = await browser.createBrowserContext();
+  const gaPage = await gaCtx.newPage();
+  const gaReqs = [];
+  gaPage.on("request", (q) => {
+    if (/googletagmanager|google-analytics/.test(q.url())) gaReqs.push(q.url());
+  });
+  await gaPage.setViewport({ width: 1280, height: 900 });
+  await gaPage.goto(url, { waitUntil: "networkidle2" });
+  await new Promise((r) => setTimeout(r, 1500));
+  ok(gaReqs.length === 0, `[${l.code}] no Google request before consent`, gaReqs.join(" "));
+  await gaPage.evaluate(() => {
+    const b = document.querySelector('[data-cookie="accept"]') || document.getElementById("cookie-accept");
+    if (b) b.click();
+  });
+  await new Promise((r) => setTimeout(r, 6000));
+  ok(gaReqs.some((u) => /collect/.test(u)), `[${l.code}] analytics sends a collect request after consent`,
+    `requests=${gaReqs.length}`);
+  await gaCtx.close();
 
   // Shared components must be vendored and not locally modified: a site that drifted
   // from the shared file is where the toolbar bugs came back.
