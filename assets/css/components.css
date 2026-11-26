@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Shared UI components — the canonical source for every generated site.
+   Repo: yourdataweb/site-components
+   Vendored into each site at assets/css/components.css and pinned by
+   src/components.lock (sha256). Do not edit the copy inside a site: change
+   this file, bump VERSION, and re-run scripts/sync-shared.mjs everywhere.
+
+   Each site sets only the custom properties; the rules stay identical, so a
+   fix here reaches every site instead of drifting into eight variants.
+   ========================================================================== */
+
+/* ---------- visually hidden, but readable by assistive tech ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- skip link ---------- */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: .75rem 1.25rem;
+  border-radius: 0 0 6px 0;
+  background: var(--shared-ink, #10222a);
+  color: #fff;
+  text-decoration: none;
+}
+.skip-link:focus { left: 0; }
+
+/* ---------- language switch ----------
+   Site overrides, set in its own :root:
+     --langs-bg --langs-border --langs-ink --langs-active-bg --langs-active-ink
+   Geometry is fixed on purpose: a flags-only variant made the pill narrower
+   than the flag plus its padding, so the active background bled past the flag,
+   and a per-site height meant the bar never aligned with the button beside it.
+   -------------------------------------------------------------------------- */
+.langs {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 32px;
+  padding: 0 3px;
+  border: 1px solid var(--langs-border, #d8dee2);
+  border-radius: 999px;
+  background: var(--langs-bg, #fff);
+  box-sizing: border-box;
+}
+.langs__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 9px;
+  border-radius: 999px;
+  text-decoration: none;
+  line-height: 1;
+  color: var(--langs-ink, #40565f);
+  transition: background-color .15s ease, color .15s ease;
+}
+.langs__link:hover { background: rgba(0, 0, 0, .06); }
+.langs__link[aria-current="true"] {
+  background: var(--langs-active-bg, #0e2f3d);
+  color: var(--langs-active-ink, #fff);
+}
+.langs__link[aria-current="true"]:hover { background: var(--langs-active-bg, #0e2f3d); }
+
+/* The flag markup is a bare <svg> with only a viewBox, so it sizes itself and
+   would overflow the pill; the box is a hard size that clips it. */
+.langs__flag {
+  display: block;
+  flex: none;
+  width: 20px;
+  height: 13px;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .12);
+}
+.langs__flag svg {
+  display: block;
+  width: 20px;
+  height: 13px;
+}
+.langs__code {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 420px) {
+  .langs { height: 30px; }
+  .langs__link { height: 24px; padding: 0 7px; gap: 5px; }
+  .langs__code { font-size: .68rem; }
+}
+
+/* ---------- reveal on scroll ----------
+   Only hidden when the script has marked the document: with JS blocked the
+   content stays visible instead of every block sitting at opacity 0. */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .55s ease, transform .55s cubic-bezier(.22, 1, .36, 1);
+}
+html.js .reveal.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- invariants ----------
+   Restated last so a site's own stylesheet cannot quietly change them. The
+   earlier language-switch bugs came from per-site geometry, not from colour. */
+.langs {
+  height: 32px;
+  padding: 0 3px;
+  gap: 2px;
+  border-radius: 999px;
+  border: 1px solid var(--langs-border, #d8dee2);
+  background: var(--langs-bg, #fff);
+  box-sizing: border-box;
+}
+.langs__link { height: 26px; padding: 0 9px; gap: 6px; border-radius: 999px; }
+.langs__flag { width: 20px; height: 13px; overflow: hidden; flex: none; }
+.langs__flag svg { width: 20px; height: 13px; display: block; }
+
+@media (max-width: 420px) {
+  .langs { height: 30px; }
+  .langs__link { height: 24px; padding: 0 7px; gap: 5px; }
+}

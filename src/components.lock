@@ -1,0 +1,13 @@
+{
+  "version": "1.0.1",
+  "files": {
+    "assets/css/components.css": {
+      "sha256": "c1c0eacb040d3ba9479bd45176d4df214c1f0e4526e3896302eea8fa1d2db37a",
+      "bytes": 4350
+    },
+    "assets/js/components.js": {
+      "sha256": "817e3466d1426c42315f5f7378d323e7a0bc29697b8d025e11a5cc00b62b26b1",
+      "bytes": 4615
+    }
+  }
+}

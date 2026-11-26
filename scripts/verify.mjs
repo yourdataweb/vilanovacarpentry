@@ -7,6 +7,7 @@ import { createServer } from "node:http";
 import { readFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 import puppeteer from "puppeteer";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -321,6 +322,23 @@ for (const l of LANGS) {
     `[${l.code}] every language pill shows its code`, `${info.langs.codes}/${info.langs.pills}`);
   ok(info.langs.h === 32, `[${l.code}] language switch is 32px tall at desktop`, `${info.langs.h}px`);
   ok(info.langs.pills === LANGS.length, `[${l.code}] one pill per locale`, String(info.langs.pills));
+
+  // Shared components must be vendored and not locally modified: a site that drifted
+  // from the shared file is where the toolbar bugs came back.
+  const lockPath = join(ROOT, "src/components.lock");
+  ok(existsSync(lockPath), `[${l.code}] shared components are pinned (src/components.lock)`);
+  if (existsSync(lockPath)) {
+    const lock = JSON.parse(readFileSync(lockPath, "utf8"));
+    let drifted = [];
+    for (const [rel, meta] of Object.entries(lock.files || {})) {
+      const abs = join(ROOT, rel);
+      if (!existsSync(abs)) { drifted.push(`${rel} missing`); continue; }
+      const h = createHash("sha256").update(readFileSync(abs)).digest("hex");
+      if (h !== meta.sha256) drifted.push(`${rel} modified`);
+    }
+    ok(drifted.length === 0,
+      `[${l.code}] shared components match the pinned version ${lock.version}`, drifted.join(", "));
+  }
 
   // README must exist, link the live site, and use the shared section order.
   const readmePath = join(ROOT, "README.md");
