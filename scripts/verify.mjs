@@ -559,6 +559,25 @@ for (const l of LANGS) {
   await ctx.close();
 }
 
+/* llms.txt is checked as a static file, not through the page: it exists for crawlers
+   and answer engines, which fetch it by URL and never run the site's JS. An empty or
+   stray-HTML file here is invisible in a browser but useless to the crawler, so assert
+   the shape llmstxt.org parsers rely on: one H1, a blockquote summary, and a link per
+   locale that names this site's own URL. */
+{
+  const res = await fetch(BASE + "llms.txt");
+  const body = res.ok ? await res.text() : "";
+  ok(res.status === 200, "llms.txt served at /llms.txt", String(res.status));
+  ok(!/<(html|body|div|p)[\s>]/i.test(body), "llms.txt is plain text, not HTML");
+  ok(/^# \S/.test(body), "llms.txt starts with an H1");
+  ok(/^# .*\n\n> \S/m.test(body), "llms.txt has a blockquote summary under the H1");
+  ok(body.includes(SITE_URL), "llms.txt names the site's own origin");
+  for (const l of LANGS) {
+    ok(body.includes(`${SITE_URL}/${l.dir}`), `llms.txt links the ${l.code} locale`);
+  }
+  ok(body.trim().length > 300, "llms.txt has real content", `${body.trim().length} chars`);
+}
+
 await browser.close();
 server.close();
 

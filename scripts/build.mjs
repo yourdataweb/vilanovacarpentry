@@ -178,6 +178,112 @@ function jsonLd(t, lang) {
   return JSON.stringify(d, null, 2);
 }
 
+/* llms.txt — the machine-readable site summary that AI crawlers and answer engines
+   read (llmstxt.org). Generated on every build from data.json plus the default
+   dictionary, never hand-written, so it cannot drift from the rendered pages: change a
+   phone number or add a dish and the file follows. Shape follows the spec — one H1, a
+   blockquote summary, then flat link lists — because that is the part parsers read
+   reliably. Served at /llms.txt, which is where the convention looks for it.
+   NOTE: only facts already public on the site go in here. No hours, no prices, no
+   provenance — the same omissions the pages keep. */
+function buildLlmsTxt() {
+  const t = dicts[DEFAULT];
+  const at = (p) => `${SITE_URL}/${p}`;
+  const flat = (s) => String(s).replace(/\s+/g, " ").trim();
+  const out = [];
+  const push = (...ls) => ls.forEach((l) => out.push(l));
+
+  push(`# ${biz.legalName || biz.name}`, "");
+  push(`> ${flat(t.meta.description)}`, "");
+  if (t.brand?.sub) push(`${flat(t.brand.sub)}.`);
+
+  /* One or two prose paragraphs: the section this business type uses for the "who we
+     are" text. The hero is a slogan; the about/hotel/roast lead is the description an
+     answer engine can actually quote. */
+  const prose = [t.about?.lead, t.about?.body1 ?? t.about?.body, t.hotel?.lead, t.roast?.lead]
+    .filter((p) => typeof p === "string" && p.trim())
+    .slice(0, 2)
+    .map(flat);
+  if (prose.length) push("", ...prose);
+
+  /* Body sections: every dictionary section that carries content items, in dictionary
+     order, titled by the section's own heading. The item text field differs per
+     business type (text, note, detail), so each is tried before the item is dropped. */
+  /* Section headings when a dictionary block has no title of its own. The numbered
+     steps lists live inside the about/treatment area on the page and carry no heading,
+     so they need one here or the file reads as an unlabelled dump. */
+  const UNTITLED = { ca: "Com funciona", es: "Cómo funciona", en: "How it works" };
+  const SKIP = new Set([
+    "meta", "a11y", "brand", "nav", "langSwitch", "cookies", "cookie", "footer", "foot",
+    "jsonLd", "languageNames", "photo", "reviews", "hero", "about", "countryName",
+    "locale", "htmlLang", "ogLocale", "dir", "pathPrefix", "facts", "strip", "glance",
+    "visit", "book", "contact",
+  ]);
+  for (const [key, sec] of Object.entries(t)) {
+    if (SKIP.has(key) || !sec || typeof sec !== "object" || Array.isArray(sec)) continue;
+    const entries = [];
+    if (sec.items && typeof sec.items === "object") {
+      for (const it of Object.values(sec.items)) {
+        if (!it || typeof it !== "object") continue;
+        const label = it.title ?? it.name;
+        const text = it.text ?? it.note ?? it.detail ?? it.description ?? "";
+        if (label) entries.push(`- **${flat(label)}**${text ? `: ${flat(text)}` : ""}`);
+      }
+    } else {
+      /* Sections that group prose blocks instead of a list (treatments, services). */
+      for (const it of Object.values(sec)) {
+        if (it && typeof it === "object" && typeof it.title === "string") {
+          const text = it.lead ?? it.text ?? "";
+          entries.push(`- **${flat(it.title)}**${text ? `: ${flat(text)}` : ""}`);
+        }
+      }
+    }
+    if (!entries.length) continue;
+    push("", `## ${flat(sec.title || sec.eyebrow || UNTITLED[DEFAULT] || key)}`);
+    if (sec.lead) push("", flat(sec.lead));
+    push("", ...entries);
+  }
+
+  /* The facts an answer engine quotes verbatim. */
+  push("", "## Practical information", "");
+  push(`- Address: ${[biz.street, `${biz.postalCode} ${biz.city}`.trim(), biz.region]
+    .filter(Boolean).map(flat).join(", ")}`);
+  if (biz.phoneNational) push(`- Phone: ${biz.phoneNational}${biz.phoneE164 ? ` (${biz.phoneE164})` : ""}`);
+  if (biz.phoneIsMobile && biz.phoneE164) {
+    push(`- WhatsApp: https://wa.me/${biz.phoneE164.replace(/[^0-9]/g, "")}`);
+  }
+  if (biz.website) push(`- Website: ${biz.website}`);
+  push(`- Google listing: ${links.place}`);
+  push(`- Directions: ${links.directions}`);
+  if (biz.plusCode) push(`- Plus code: ${biz.plusCode}`);
+  if (biz.rating > 4) {
+    push(`- Rating: ${Number(biz.rating).toFixed(1)}/5${biz.ratingCount > 50
+      ? ` from ${Number(biz.ratingCount).toLocaleString("en-GB")} Google reviews` : ""}`);
+  }
+  push(`- Coordinates: ${biz.latitude}, ${biz.longitude}`);
+
+  /* Testimonials, short and attributed: the quote is what gets cited. */
+  const quotes = Object.values(t.reviews?.items || {})
+    .filter((q) => q && typeof q.text === "string")
+    .slice(0, 3);
+  if (quotes.length) {
+    push("", "## What customers say");
+    for (const q of quotes) {
+      push("", `> "${flat(q.text)}"${q.author ? ` — ${flat(q.author)}` : ""}`);
+    }
+  }
+
+  /* Every locale is a real page with its own URL, so an answer engine can send a
+     reader to the language they asked in. */
+  push("", "## Languages", "");
+  for (const l of LANGS) {
+    push(`- [${l.name}](${at(l.dir)})${l.code === DEFAULT ? " — default" : ""}`);
+  }
+
+  push("", "## Canonical", "", `- Home: ${SITE_URL}`, `- Sitemap: ${SITE_URL}/sitemap.xml`, "");
+  return out.join("\n");
+}
+
 const ast = parse(tokenize(read("src/template.html")));
 const YEAR = new Date().getFullYear();
 const FLAGS = JSON.parse(read("scripts/flags.json"));
@@ -293,6 +399,7 @@ ${LANGS.map((l) => {
 </urlset>
 `);
 write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+write("llms.txt", buildLlmsTxt());
 write("site.webmanifest", JSON.stringify({
   name: biz.legalName || biz.name, short_name: biz.name, start_url: "./",
   display: "standalone", background_color: biz.manifestBackground || "#ffffff",
@@ -303,4 +410,4 @@ write("site.webmanifest", JSON.stringify({
   ],
 }, null, 2) + "\n");
 
-console.log("✓ sitemap.xml, robots.txt, site.webmanifest");
+console.log("✓ sitemap.xml, robots.txt, site.webmanifest, llms.txt");

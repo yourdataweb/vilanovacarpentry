@@ -96,7 +96,7 @@ jobs:
             aws s3 cp "$f" "s3://$S3_BUCKET/$S3_PREFIX/$f" \
               --cache-control "public, max-age=0, must-revalidate" --only-show-errors
           done
-          for f in sitemap.xml robots.txt manifest.webmanifest site.webmanifest; do
+          for f in sitemap.xml robots.txt llms.txt manifest.webmanifest site.webmanifest; do
             if [ -f "$f" ]; then
               aws s3 cp "$f" "s3://$S3_BUCKET/$S3_PREFIX/$f" \
                 --cache-control "public, max-age=300, must-revalidate" --only-show-errors
@@ -107,7 +107,7 @@ jobs:
         run: |
           set -euo pipefail
           missing=0
-          keys="index.html sitemap.xml robots.txt"
+          keys="index.html sitemap.xml robots.txt llms.txt"
           for f in */index.html; do keys="$keys $f"; done
           # Derive the asset keys from the build output so a site whose script or
           # stylesheet has a different name is not reported as missing.
