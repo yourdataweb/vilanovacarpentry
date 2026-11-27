@@ -21,6 +21,8 @@ const CHECK = process.argv.includes("--check");
 const FILES = [
   { from: "components.css", to: "assets/css/components.css" },
   { from: "components.js", to: "assets/js/components.js" },
+  /* Language flag artwork lives here so a wrong flag is fixed once, not thirteen times. */
+  { from: "flags.json", to: "scripts/flags.json" },
 ];
 
 const sha = (buf) => createHash("sha256").update(buf).digest("hex");
