@@ -52,7 +52,9 @@ const PAD_X = Math.round(W * 0.042);   // side padding inside the band
 const PAD_TOP = Math.round(W * 0.038);
 const PAD_BOTTOM = Math.round(W * 0.034);
 
-const data = JSON.parse(readFileSync(join(SITE, "src/data.json"), "utf8"));
+/* A site with a different build shape can point at its own fact file with --data. */
+const DATA_FILE = join(SITE, arg("data", "src/data.json"));
+const data = JSON.parse(readFileSync(DATA_FILE, "utf8"));
 const DOMAIN = data.siteDomain || "vilanovailageltru.info";
 const SLUG = data.slug;
 const URL = `https://${SLUG}.${DOMAIN}/`;
@@ -135,8 +137,15 @@ const px = (n) => Math.round(n * (W / 1240));
 const urlLine = URL;
 
 /* ---- serve the built site: the capture must be the real page ---- */
-const LANGS = JSON.parse(readFileSync(join(SITE, "src/locales.json"), "utf8"));
-const dir = LANG === "ca" || !LANGS.some((l) => l.code === LANG) ? "" : LANG + "/";
+/* Not every site was scaffolded from this skill: some keep their locale list inside
+   the template and have no src/locales.json. Fall back to probing the built dirs so
+   the capture still serves the right page for the requested language. */
+const LOCALES_FILE = join(SITE, "src/locales.json");
+const LANGS = existsSync(LOCALES_FILE)
+  ? JSON.parse(readFileSync(LOCALES_FILE, "utf8"))
+  : [{ code: "ca", dir: "", default: true }];
+const DEFAULT_CODE = (LANGS.find((l) => l.default) || LANGS[0]).code;
+const dir = LANG === DEFAULT_CODE ? "" : (existsSync(join(SITE, LANG, "index.html")) ? LANG + "/" : "");
 const MIME = {
   ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml",
