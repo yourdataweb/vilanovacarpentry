@@ -302,6 +302,7 @@ function buildLocale(lang) {
   const dishKeys = Object.keys(t.menu?.items || {});
   const quoteKeys = Object.keys(t.reviews?.items || {});
 
+  const OF = t.offer || (dicts[DEFAULT] && dicts[DEFAULT].offer) || {};
   const model = {
     meta: {
       lang, title: t.meta.title, description: t.meta.description,
@@ -310,6 +311,42 @@ function buildLocale(lang) {
       canonicalPath: lang === DEFAULT ? "" : lang + "/",
     },
     site: { url: SITE_URL },
+    /* Offer panel config, emitted per locale and read by assets/js/offer-panel.js.
+       Kept as one JSON blob in the page so the copy is translated with the rest of
+       the site and no extra request is needed to render the panel. */
+    /* A locale without offer copy falls back to the default locale's, so adding a
+       language cannot silently drop the panel. */
+    offer: (biz.offerEnds || biz.buyUrl) ? {
+      offerEnds: biz.offerEnds || "",
+      offerEndsLabel: biz.offerEnds
+        ? new Date(biz.offerEnds + "T12:00:00").toLocaleDateString(
+            lang === "en" ? "en-GB" : lang === "ca" ? "ca-ES" : "es-ES",
+            { day: "numeric", month: "long", year: "numeric" })
+        : "",
+      buyUrl: biz.buyUrl || "",
+      offerEmail: biz.offerEmail || "",
+      phoneE164: biz.phoneE164,
+      copy: {
+        kicker: OF.kicker,
+        title:  OF.title,
+        lead:  OF.lead,
+        features:  OF.features,
+        priceYear:  OF.priceYear,
+        priceMonth:  OF.priceMonth,
+        priceNote:  OF.priceNote,
+        until:  OF.until,
+        days:  OF.days,
+        cta:  OF.cta,
+        buy:  OF.buy,
+        buyPhone:  OF.buyPhone,
+        contact:  OF.contact,
+        call:  OF.call,
+        close:  OF.close,
+        pill:  OF.pill,
+        foot:  OF.foot,
+      },
+      json: "",
+    } : null,
     business: {
       ...biz,
       cityShort: biz.city,
@@ -345,8 +382,14 @@ function buildLocale(lang) {
     }),
   };
 
+  if (model.offer) {
+    const { json, ...rest } = model.offer;
+    model.offer = rest;
+    model.offer.json = JSON.stringify(rest).replace(/</g, "\\u003c");
+  }
+
   const html = render(ast, { root: model, value: model });
-  if (/\{\{|\}\}/.test(html)) {
+  if (/\{\{[^}]*\}\}/.test(html)) {
     const m = html.match(/.{0,60}\{\{.{0,60}/);
     throw new Error(`[${lang}] unresolved template hole near: ${m && m[0]}`);
   }

@@ -173,5 +173,29 @@
   "a11y": {
     "langSwitch": "Cambio de idioma",
     "menuToggle": "Abrir el menú"
+  },
+  "offer": {
+    "kicker": "Esta web todavía no es tuya",
+    "title": "Ya está hecha. Solo falta que sea tuya.",
+    "lead": "Este sitio ya está en línea y funcionando. Lo hemos hecho para tu negocio sin que tuvieras que hacer nada; lo mantenemos en línea tres meses para que lo veas con calma.",
+    "features": [
+      "Tres idiomas",
+      "Hecho para el móvil",
+      "Preparado para Google y para los asistentes de IA",
+      "Opiniones reales"
+    ],
+    "priceYear": "120 € al año + IVA",
+    "priceMonth": "10 € al mes",
+    "priceNote": "Lo único que tienes que hacer es pagar. El resto ya está hecho.",
+    "until": "En línea hasta el",
+    "days": "Quedan {n} días",
+    "cta": "Quiero la web",
+    "buy": "Quiero la web",
+    "buyPhone": "Llama y quédate con ella",
+    "contact": "Habla con nosotros",
+    "call": "Llámanos",
+    "close": "Cerrar",
+    "pill": "Esta web todavía no es tuya",
+    "foot": "Si no la quieres, la retiramos al terminar el periodo. Sin compromiso."
   }
 }

@@ -173,5 +173,29 @@
   "a11y": {
     "langSwitch": "Language switch",
     "menuToggle": "Open menu"
+  },
+  "offer": {
+    "kicker": "This site is not yours yet",
+    "title": "It's already built. It just isn't yours yet.",
+    "lead": "This site is live and working. We built it for your business without you having to do anything, and we keep it online for three months so you can look at it properly.",
+    "features": [
+      "Three languages",
+      "Built for mobile",
+      "Set up for Google and AI assistants",
+      "Real reviews"
+    ],
+    "priceYear": "€120 a year + VAT",
+    "priceMonth": "€10 a month",
+    "priceNote": "Paying is the only thing you have to do. The rest is done.",
+    "until": "Online until",
+    "days": "{n} days left",
+    "cta": "I want the site",
+    "buy": "I want the site",
+    "buyPhone": "Call and claim it",
+    "contact": "Talk to us",
+    "call": "Call us",
+    "close": "Close",
+    "pill": "This site is not yours yet",
+    "foot": "If you don't want it, we take it down when the period ends. No commitment."
   }
 }

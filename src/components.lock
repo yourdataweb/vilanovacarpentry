@@ -1,5 +1,5 @@
 {
-  "version": "2.0.6",
+  "version": "3.0.5",
   "files": {
     "assets/css/components.css": {
       "sha256": "c1c0eacb040d3ba9479bd45176d4df214c1f0e4526e3896302eea8fa1d2db37a",
@@ -20,6 +20,14 @@
     "assets/js/header-tools.js": {
       "sha256": "4b6e7f8c1be5a406053537598a8258ca92612eaea80db781b0ce9a9bbe8c3497",
       "bytes": 6096
+    },
+    "assets/css/offer-panel.css": {
+      "sha256": "341d2bd3fe90fe9283c52b1681273106b485dc4b5dcdce1fc8203ceaf180bcea",
+      "bytes": 9053
+    },
+    "assets/js/offer-panel.js": {
+      "sha256": "b05dd5e87294c11ab00d698c592ceadf63998bb6794ec90f0e4c2afec68a0718",
+      "bytes": 10628
     }
   }
 }

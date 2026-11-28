@@ -26,6 +26,9 @@ const FILES = [
   /* Header toolbar: one row for name + menu button + language switch on every site. */
   { from: "header-tools.css", to: "assets/css/header-tools.css" },
   { from: "header-tools.js", to: "assets/js/header-tools.js" },
+  /* Offer panel: the buy/contact CTA for a site that is live but unbought. */
+  { from: "offer-panel.css", to: "assets/css/offer-panel.css" },
+  { from: "offer-panel.js", to: "assets/js/offer-panel.js" },
 ];
 
 const sha = (buf) => createHash("sha256").update(buf).digest("hex");

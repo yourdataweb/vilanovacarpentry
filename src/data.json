@@ -61,5 +61,8 @@
   "gold": "#c8963e",
   "light": "#e0bd7c",
   "manifestTheme": "#2a1c12",
-  "manifestBackground": "#fbf7f0"
+  "manifestBackground": "#fbf7f0",
+  "offerEnds": "2027-02-26",
+  "buyUrl": "",
+  "offerEmail": ""
 }
