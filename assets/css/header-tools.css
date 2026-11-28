@@ -1,0 +1,164 @@
+/* ==========================================================================
+   Shared header toolbar — one row at every width.
+   Repo: yourdataweb/site-components
+   Vendored into each site at assets/css/header-tools.css and pinned by
+   src/components.lock.
+
+   Anatomy this operates on (built by header-tools.js):
+     <header ...>
+       <div class="wrap">                     existing inner wrapper
+         <a class="brand">[mark]<span class="sm-name">Business</span></a>
+         <nav id="site-nav">…</nav>           drawer on mobile
+         <button class="nav-toggle">…</button>
+         <div class="sm-tools">               created by the script
+           <nav class="langs">…</nav>
+           <button class="nav-toggle">…</button>
+         </div>
+       </div>
+     </header>
+
+   Goal: name, menu button and language switch share one row, vertically centred,
+   with real gutters. The name is the only flexible item, so a long business name
+   truncates instead of pushing the tools onto a second row.
+   ========================================================================== */
+
+/* A header inner that wraps is the original defect: the address line and the
+   switch fell onto a second row and the bar grew to twice its height. Once the
+   toolbar is in place there is one row by construction, so wrapping is off. */
+.has-tools [data-tools] > .wrap,
+.has-tools [data-tools] > .shell,
+.has-tools [data-tools] > .container,
+.has-tools [data-tools][class*="inner"] {
+  flex-wrap: nowrap;
+}
+
+/* The tools container is the anchor: it sits at the right edge of the bar. */
+.sm-tools {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  /* Never grows; may shrink only as a last resort. The identity owns the flexible
+     slot, so the row cannot become wider than the viewport. */
+  flex: none;
+  max-width: 100%;
+  margin-left: auto;
+}
+
+/* Anything still marked as "belongs on the bar" is aligned to the same centre line,
+   so a switch left outside .sm-tools cannot drift a few pixels off the button. */
+.has-tools .langs,
+.has-tools .nav-toggle,
+.has-tools .navbtn {
+  align-self: center;
+}
+
+/* The name is the only item allowed to shrink. min-width:0 is what actually lets
+   flex truncate instead of overflowing; without it the text refuses to compress
+   and shoves the tools off the row. */
+.sm-parent-safe {
+  min-width: 0;
+}
+
+.has-tools .sm-name {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The identity link wraps the mark and the name; it must be able to shrink while
+   the mark itself never does. Sites that put `margin-right: auto` on the brand to
+   push the switch away are neutralised: the toolbar owns that spacing now, and the
+   leftover margin was what made one header 98px tall. */
+.has-tools .sm-name {
+  /* A long single word ("BRASPAÑA") contributes its full width as min-content and
+     forces the row wider. Capping it is what lets the toolbar keep its place. */
+  max-width: 100%;
+}
+
+.has-tools .brand,
+.has-tools .identity,
+.has-tools .marchio,
+.has-tools .logo,
+.has-tools .mark,
+.has-tools .sign {
+  margin-right: 0;
+}
+.has-tools .sm-name {
+  /* A long single word ("BRASPAÑA") contributes its full width as min-content and
+     forces the row wider. Capping it is what lets the toolbar keep its place. */
+  max-width: 100%;
+}
+
+.has-tools .brand,
+.has-tools .identity,
+.has-tools .marchio,
+.has-tools .logo,
+.has-tools .sign {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.has-tools .sm-mark,
+.has-tools .brand__mark,
+.has-tools .identity__mark,
+.has-tools .marchio__mark,
+.has-tools .logo__mark,
+.has-tools .mark__mark,
+.has-tools .sign__mark,
+.has-tools .brand-mark {
+  flex: none;
+}
+
+/* ---------------------------------------------------------------- mobile
+   Below the drawer breakpoint the bar carries three things in ~330 px of space:
+   prune the name to one line at a smaller size, keep the mark visible, and keep
+   the switch on 30 px so it lines up with a 38 px button without dominating. */
+@media (max-width: 860px) {
+  /* The address strip repeats the footer and the contact block; on a phone it is
+     what pushes the bar down and leaves the tools on a second line. */
+  .sm-strip-note {
+    display: none;
+  }
+
+  /* A phone link in the bar is redundant next to a call button in the hero and in
+     the contact block, and it is the widest thing in the toolbar. Drop it before
+     it costs the business its name. */
+  .sm-tools .head-phone,
+  .sm-tools .topbar__tel,
+  .sm-tools .header-phone {
+    display: none;
+  }
+
+  .has-tools .brand__sub,
+  .has-tools .identity__sub,
+  .has-tools .marchio__sub,
+  .has-tools .logo__sub,
+  .has-tools .mark__sub,
+  .has-tools .sign__sub,
+  .has-tools .brand-sub {
+    display: none;
+  }
+
+  .has-tools .sm-name {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .sm-tools {
+    gap: .4rem;
+  }
+}
+
+/* Very narrow: the mark plus a 6-character name plus two controls is the floor.
+   Tighten gutters rather than dropping the language switch — a visitor with a
+   phone is exactly who needs it. */
+@media (max-width: 380px) {
+  .sm-tools {
+    gap: .3rem;
+  }
+  .has-tools .sm-name {
+    font-size: .92rem;
+  }
+}

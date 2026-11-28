@@ -23,6 +23,9 @@ const FILES = [
   { from: "components.js", to: "assets/js/components.js" },
   /* Language flag artwork lives here so a wrong flag is fixed once, not thirteen times. */
   { from: "flags.json", to: "scripts/flags.json" },
+  /* Header toolbar: one row for name + menu button + language switch on every site. */
+  { from: "header-tools.css", to: "assets/css/header-tools.css" },
+  { from: "header-tools.js", to: "assets/js/header-tools.js" },
 ];
 
 const sha = (buf) => createHash("sha256").update(buf).digest("hex");

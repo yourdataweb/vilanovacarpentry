@@ -91,12 +91,21 @@
     shell.setAttribute("data-map-loaded", "true");
   }
 
-  function showBar() { if (bar) bar.setAttribute("data-visible", "true"); }
+  /* The bar is shown on a delay so it does not cover the first paint. That timer must
+     not resurrect it after the visitor has already answered: a fast click used to be
+     followed by the pending timeout, and the notice reappeared over the page. */
+  var barTimer = null;
+  function showBar() {
+    if (!bar) return;
+    if (stored()) return;
+    bar.setAttribute("data-visible", "true");
+  }
+  function cancelBar() { if (barTimer) { window.clearTimeout(barTimer); barTimer = null; } }
   function hideBar() { if (bar) bar.setAttribute("data-visible", "false"); }
 
   var choice = stored();
   if (!choice && bar) {
-    window.setTimeout(showBar, 1100);
+    barTimer = window.setTimeout(showBar, 1100);
   } else if (choice === "accepted") {
     loadMap();
   }
@@ -107,6 +116,7 @@
       if (!btn) return;
       var v = btn.getAttribute("data-cookie");
       store(v);
+      cancelBar();
       hideBar();
       if (window.__analyticsConsent) window.__analyticsConsent(v === "accept");
       if (v === "accept") loadMap();
@@ -117,6 +127,7 @@
   if (mapBtn) {
     mapBtn.addEventListener("click", function () {
       store("accepted");
+      cancelBar();
       hideBar();
       if (window.__analyticsConsent) window.__analyticsConsent(true);
       loadMap();
